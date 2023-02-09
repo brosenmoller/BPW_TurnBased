@@ -35,7 +35,7 @@ public class DungeonMapGenerator : MonoBehaviour
         RandomFillMap();
         ComputeMap();
 
-        //map = GridRoomCleanup.CleanUpRoomsInGrid(map, minRoomSize);
+        map = GridRoomCleanup.CleanUpRoomsInGrid(map, minRoomSize, mapSize);
 
         if (generateTilemap)
         {
