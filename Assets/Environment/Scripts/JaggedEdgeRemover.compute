@@ -3,34 +3,21 @@
 int mapSize = 256;
 RWStructuredBuffer<int> map;
 
-int AdjecentWallCount(int x, int y)
-{
-    int adjecentWallCounter = 0;
-
-    if (map[x + y * mapSize] == 0)
-    {
-        if (map[(x - 1) + y * mapSize] == 1) { adjecentWallCounter++; }
-        if (map[(x + 1) + y * mapSize] == 1) { adjecentWallCounter++; }
-        if (map[x + (y - 1) * mapSize] == 1) { adjecentWallCounter++; }
-        if (map[x + (y - 1) * mapSize] == 1) { adjecentWallCounter++; }
-
-        if (adjecentWallCounter == 3)
-        {
-            map[x + y * mapSize] = 1;
-        }
-    }
-
-    return adjecentWallCounter;
-}
-
-
 [numthreads(16, 16, 1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
-	int adjecentWallCount = AdjecentWallCount(id.x, id.y);
+    if (map[id.x + id.y * mapSize] == 0)
+    {
+        int adjecentWallCounter = 0;
+        
+        if (map[(id.x - 1) + id.y * mapSize] == 1) { adjecentWallCounter++; }
+        if (map[(id.x + 1) + id.y * mapSize] == 1) { adjecentWallCounter++; }
+        if (map[id.x + (id.y - 1) * mapSize] == 1) { adjecentWallCounter++; }
+        if (map[id.x + (id.y + 1) * mapSize] == 1) { adjecentWallCounter++; }
 
-    if (adjecentWallCount == 3) 
-    { 
-        map[id.x + id.y * mapSize] = 1; 
+        if (adjecentWallCounter == 3)
+        {
+            map[id.x + id.y * mapSize] = 1;
+        }
     }
 }

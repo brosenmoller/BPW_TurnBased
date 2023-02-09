@@ -1,12 +1,12 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(DungeonTilemapGenerator), true)]
-public class DungeonTilemapGeneratorEditor : Editor
+[CustomEditor(typeof(DungeonMapGenerator), true)]
+public class DungeonMapGeneratorEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        DungeonTilemapGenerator cc = (DungeonTilemapGenerator)target;
+        DungeonMapGenerator cc = (DungeonMapGenerator)target;
 
         if (DrawDefaultInspector())
         {

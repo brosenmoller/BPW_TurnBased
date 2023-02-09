@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Tilemaps;
 
-public class DungeonTilemapGenerator : MonoBehaviour
+public class DungeonMapGenerator : MonoBehaviour
 {
     [Header("General")]
     public bool autoUpdate;
@@ -11,47 +10,32 @@ public class DungeonTilemapGenerator : MonoBehaviour
     [Header("Walls")]
     [SerializeField, Range(0, 100)] private int randomFillPercent;
     [SerializeField, Range(0, 100)] private int smoothInterations;
-    //[SerializeField, Range(0, 10)] private int jaggerdIterations;
+    [SerializeField, Range(0, 100)] private int minSizeRoomPercentage;
     [SerializeField, Range(0, 9)] private int wallCuttoff;
 
     [Header("Tilemap Generation")]
     [SerializeField] private bool generateTilemap;
     [SerializeField] private TilemapGenerator tilemapGenerator;
 
-    [Header("Compute Shader")]
+    [Header("Compute Shaders")]
     [SerializeField] private ComputeShader cellularAutomataComputeShader;
     [SerializeField] private ComputeShader removeJaggedEdgesComputeShader;
 
     private int[] map;
+    private int minRoomSize;
 
-    private void Start()
+    private void Awake()
     {
-        
+        minRoomSize = (minSizeRoomPercentage / 100) * (mapSize * mapSize);
     }
 
     public void GenerateMap()
     {
         map = new int[mapSize * mapSize];
         RandomFillMap();
+        ComputeMap();
 
-        ComputeBuffer mapBuffer = new(map.Length, sizeof(int));
-        mapBuffer.SetData(map);
-
-        cellularAutomataComputeShader.SetBuffer(0, "map", mapBuffer);
-        cellularAutomataComputeShader.SetInt("wallCutoff", wallCuttoff);
-        cellularAutomataComputeShader.SetInt("mapSize", mapSize);
-
-        for (int i = 0; i < smoothInterations; i++)
-        {
-            cellularAutomataComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
-        }
-
-        removeJaggedEdgesComputeShader.SetBuffer(0, "map", mapBuffer);
-        removeJaggedEdgesComputeShader.SetInt("mapSize", mapSize);
-        removeJaggedEdgesComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
-
-        mapBuffer.GetData(map);
-        mapBuffer.Dispose();
+        //map = GridRoomCleanup.CleanUpRoomsInGrid(map, minRoomSize);
 
         if (generateTilemap)
         {
@@ -79,19 +63,26 @@ public class DungeonTilemapGenerator : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    private void ComputeMap()
     {
-        if (map != null && !generateTilemap)
+        ComputeBuffer mapBuffer = new(map.Length, sizeof(int));
+        mapBuffer.SetData(map);
+
+        cellularAutomataComputeShader.SetBuffer(0, "map", mapBuffer);
+        cellularAutomataComputeShader.SetInt("wallCutoff", wallCuttoff);
+        cellularAutomataComputeShader.SetInt("mapSize", mapSize);
+
+        for (int i = 0; i < smoothInterations; i++)
         {
-            for (int x = 0; x < mapSize; x++)
-            {
-                for (int y = 0; y < mapSize; y++)
-                {
-                    Gizmos.color = map[x + y * mapSize] == 1 ? Color.black : Color.green;
-                    Vector3 position = new(-mapSize / 2 + x + .5f, -mapSize / 2 + y + .5f, 0);
-                    Gizmos.DrawCube(position, Vector3.one);
-                }
-            }
+            cellularAutomataComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
         }
+
+        removeJaggedEdgesComputeShader.SetBuffer(0, "map", mapBuffer);
+        removeJaggedEdgesComputeShader.SetInt("mapSize", mapSize);
+
+        removeJaggedEdgesComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
+
+        mapBuffer.GetData(map);
+        mapBuffer.Dispose();
     }
 }
