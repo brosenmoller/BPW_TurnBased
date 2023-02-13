@@ -7,11 +7,15 @@ public class DungeonMapGenerator : MonoBehaviour
     [SerializeField] private int mapSize;
     [SerializeField] private int seed;
 
-    [Header("Walls")]
+    [Header("Cellular Automata")]
     [SerializeField, Range(0, 100)] private int randomFillPercent;
     [SerializeField, Range(0, 100)] private int smoothInterations;
-    [SerializeField, Range(0, 100)] private int minSizeRoomPercentage;
+    
     [SerializeField, Range(0, 9)] private int wallCuttoff;
+
+    [Header("Finalization")]
+    [SerializeField, Range(0, 100)] private int cleanupIterations;
+    [SerializeField, Range(0, 20)] private float minSizeRoomPercentage;
 
     [Header("Tilemap Generation")]
     [SerializeField] private bool generateTilemap;
@@ -20,14 +24,11 @@ public class DungeonMapGenerator : MonoBehaviour
     [Header("Compute Shaders")]
     [SerializeField] private ComputeShader cellularAutomataComputeShader;
     [SerializeField] private ComputeShader removeJaggedEdgesComputeShader;
+    [SerializeField] private ComputeShader removeOneLineCorridorsComputeShader;
+    [SerializeField] private ComputeShader gridCleanupComputeShader;
 
     private int[] map;
     private int minRoomSize;
-
-    private void Awake()
-    {
-        minRoomSize = (minSizeRoomPercentage / 100) * (mapSize * mapSize);
-    }
 
     public void GenerateMap()
     {
@@ -35,7 +36,8 @@ public class DungeonMapGenerator : MonoBehaviour
         RandomFillMap();
         ComputeMap();
 
-        map = GridRoomCleanup.CleanUpRoomsInGrid(map, minRoomSize, mapSize);
+        minRoomSize = (int)(minSizeRoomPercentage / 100f * (mapSize * mapSize));
+        map = GridRoomDetection.CleanUpRoomsInGrid(map, minRoomSize, mapSize);
 
         if (generateTilemap)
         {
@@ -81,6 +83,20 @@ public class DungeonMapGenerator : MonoBehaviour
         removeJaggedEdgesComputeShader.SetInt("mapSize", mapSize);
 
         removeJaggedEdgesComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
+        
+
+        removeOneLineCorridorsComputeShader.SetBuffer(0, "map", mapBuffer);
+        removeOneLineCorridorsComputeShader.SetInt("mapSize", mapSize);
+
+        removeOneLineCorridorsComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
+
+        //gridCleanupComputeShader.SetBuffer(0, "map", mapBuffer);
+        //gridCleanupComputeShader.SetInt("mapSize", mapSize);
+
+        //for (int i = 0; i < cleanupIterations; i++)
+        //{
+        //    gridCleanupComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
+        //}
 
         mapBuffer.GetData(map);
         mapBuffer.Dispose();

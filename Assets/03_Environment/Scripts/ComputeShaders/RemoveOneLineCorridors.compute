@@ -1,0 +1,99 @@
+#pragma kernel CSMain
+
+int mapSize = 256;
+RWStructuredBuffer<int> map;
+
+// Horse Algorithm
+
+[numthreads(16, 16, 1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    if (map[id.x + id.y * mapSize] == 0)
+    {
+        if ((
+            map[id.x + (id.y + 1) * mapSize] == 1 || // Top center
+            map[(id.x + 1) + (id.y + 1) * mapSize] == 1 || // Top right
+            map[(id.x - 1) + (id.y + 1) * mapSize] == 1 // Top left
+        )
+        &&
+        (
+            map[id.x + (id.y - 1) * mapSize] == 1 || // Bottom center
+            map[(id.x + 1) + (id.y - 1) * mapSize] == 1 || // Bottom right
+            map[(id.x - 1) + (id.y - 1) * mapSize] == 1 // Bottom left
+        )
+        &&
+        (
+            map[(id.x + 1) + id.y * mapSize] == 0 && // Middle right
+            map[(id.x - 1) + id.y * mapSize] == 0 // Middle left
+        ))
+        {
+            map[id.x + (id.y + 1) * mapSize] = 0; // Top middle
+            map[(id.x + 1) + (id.y + 1) * mapSize] = 0; // Top right
+            map[(id.x - 1) + (id.y + 1) * mapSize] = 0; // Top left
+
+            map[id.x + (id.y - 1) * mapSize] = 0; // Bottom middle
+            map[(id.x + 1) + (id.y - 1) * mapSize] = 0; // Bottom right
+            map[(id.x - 1) + (id.y - 1) * mapSize] = 0; // Bottom left
+        }
+        else if 
+        ((
+            map[(id.x + 1) + id.y * mapSize] == 1 || // Middle right
+            map[(id.x + 1) + (id.y + 1) * mapSize] == 1 || // Top right
+            map[(id.x + 1) + (id.y - 1) * mapSize] == 1 // Bottom right
+        ) 
+        &&
+        (
+            map[(id.x - 1) + id.y * mapSize] == 1 || // Middle left
+            map[(id.x - 1) + (id.y + 1) * mapSize] == 1 || // Top left
+            map[(id.x - 1) + (id.y - 1) * mapSize] == 1 // Bottom left
+        )
+        &&
+        (
+            map[id.x + (id.y + 1) * mapSize] == 0 && // Top center
+            map[id.x + (id.y - 1) * mapSize] == 0 // Bottom center
+        ))
+        {
+            map[(id.x + 1) + id.y * mapSize] = 0; // Middle right
+            map[(id.x + 1) + (id.y + 1) * mapSize] = 0; // Top right
+            map[(id.x + 1) + (id.y - 1) * mapSize] = 0; // Bottom right
+
+            map[(id.x - 1) + id.y * mapSize] = 0; // Middle left
+            map[(id.x - 1) + (id.y + 1) * mapSize] = 0; // Top left
+            map[(id.x - 1) + (id.y - 1) * mapSize] = 0; // Bottom left
+        }
+        else if 
+        ((
+            map[(id.x - 1) + (id.y - 1) * mapSize] == 0 && // Bottom left
+            map[(id.x - 1) + id.y * mapSize] == 1 && // Middle left
+            map[id.x + (id.y - 1) * mapSize] == 1 // Bottom center
+        )
+        &&
+        (
+            map[(id.x - 1) + (id.y + 1) * mapSize] == 0 && // Top left
+            map[(id.x - 1) + id.y * mapSize] == 1 && // Middle left
+            map[id.x + (id.y + 1) * mapSize] == 1 // Top center
+        )
+        &&
+        (
+            map[(id.x + 1) + (id.y - 1) * mapSize] == 0 && // Bottom right
+            map[(id.x + 1) + id.y * mapSize] == 1 && // Middle right
+            map[id.x + (id.y - 1) * mapSize] == 1 // Bottom center
+        )
+        &&
+        (
+            map[(id.x + 1) + (id.y + 1) * mapSize] == 0 && // Top right
+            map[(id.x + 1) + id.y * mapSize] == 1 && // Middle right
+            map[id.x + (id.y + 1) * mapSize] == 1 // Top center
+        ))
+        {
+            map[id.x + (id.y + 1) * mapSize] = 0;
+            map[id.x + (id.y - 1) * mapSize] = 0;
+            map[(id.x + 1) + id.y * mapSize] = 0;
+            map[(id.x + 1) + (id.y + 1) * mapSize] = 0;
+            map[(id.x + 1) + (id.y - 1) * mapSize] = 0;
+            map[(id.x - 1) + id.y * mapSize] = 0;
+            map[(id.x - 1) + (id.y + 1) * mapSize] = 0;
+            map[(id.x - 1) + (id.y - 1) * mapSize] = 0;
+        }
+    }
+}

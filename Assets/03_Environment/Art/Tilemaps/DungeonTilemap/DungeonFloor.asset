@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
   m_Name: DungeonFloor
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: 734248487, guid: 916c7ac508d871c4e8c2ba52259783e3, type: 3}
+  m_DefaultSprite: {fileID: -1137434639, guid: f1c9f8471cde3084e98106bb0363a7d0, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules:
   - m_Id: 0
     m_Sprites:
-    - {fileID: 734248487, guid: 916c7ac508d871c4e8c2ba52259783e3, type: 3}
+    - {fileID: -1137434639, guid: f1c9f8471cde3084e98106bb0363a7d0, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -39,8 +39,8 @@ MonoBehaviour:
     m_RuleTransform: 0
   - m_Id: 1
     m_Sprites:
-    - {fileID: -353522120, guid: 916c7ac508d871c4e8c2ba52259783e3, type: 3}
-    - {fileID: -1345860517, guid: 916c7ac508d871c4e8c2ba52259783e3, type: 3}
+    - {fileID: 1873599102, guid: f1c9f8471cde3084e98106bb0363a7d0, type: 3}
+    - {fileID: -1671227711, guid: f1c9f8471cde3084e98106bb0363a7d0, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -59,7 +59,7 @@ MonoBehaviour:
     m_RuleTransform: 1
   - m_Id: 2
     m_Sprites:
-    - {fileID: -535410972, guid: 916c7ac508d871c4e8c2ba52259783e3, type: 3}
+    - {fileID: -2143483545, guid: f1c9f8471cde3084e98106bb0363a7d0, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -77,7 +77,7 @@ MonoBehaviour:
     m_RuleTransform: 1
   - m_Id: 3
     m_Sprites:
-    - {fileID: 1308237826, guid: 916c7ac508d871c4e8c2ba52259783e3, type: 3}
+    - {fileID: 31043976, guid: f1c9f8471cde3084e98106bb0363a7d0, type: 3}
     m_GameObject: {fileID: 0}
     m_MinAnimationSpeed: 1
     m_MaxAnimationSpeed: 1
@@ -85,12 +85,12 @@ MonoBehaviour:
     m_Output: 0
     m_ColliderType: 1
     m_RandomTransform: 0
-    m_Neighbors: 020000000200000002000000010000000100000001000000
+    m_Neighbors: 020000000100000002000000020000000100000001000000
     m_NeighborPositions:
     - {x: 0, y: 1, z: 0}
-    - {x: -1, y: 1, z: 0}
-    - {x: -1, y: 0, z: 0}
     - {x: 0, y: -1, z: 0}
-    - {x: 1, y: -1, z: 0}
+    - {x: 1, y: 1, z: 0}
     - {x: 1, y: 0, z: 0}
+    - {x: -1, y: -1, z: 0}
+    - {x: -1, y: 0, z: 0}
     m_RuleTransform: 1
