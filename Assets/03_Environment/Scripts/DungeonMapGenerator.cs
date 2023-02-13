@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UIElements;
 
 public class DungeonMapGenerator : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class DungeonMapGenerator : MonoBehaviour
     [SerializeField, Range(0, 20)] private int cleanupIterations;
     [SerializeField, Range(0, 20)] private float minSizeRoomPercentage;
 
+    [Header("Player")]
+    [SerializeField] private GameObject playerPrefab;
+
     [Header("Tilemap Generation")]
     [SerializeField] private bool generateTilemap;
     [SerializeField] private TilemapGenerator tilemapGenerator;
@@ -25,7 +29,6 @@ public class DungeonMapGenerator : MonoBehaviour
     [SerializeField] private ComputeShader cellularAutomataComputeShader;
     [SerializeField] private ComputeShader removeJaggedEdgesComputeShader;
     [SerializeField] private ComputeShader removeOneLineCorridorsComputeShader;
-    [SerializeField] private ComputeShader gridCleanupComputeShader;
 
     private int[] map;
     private int minRoomSize;
@@ -38,6 +41,8 @@ public class DungeonMapGenerator : MonoBehaviour
 
         minRoomSize = (int)(minSizeRoomPercentage / 100f * (mapSize * mapSize));
         map = GridRoomDetection.CleanUpRoomsInGrid(map, minRoomSize, mapSize);
+
+        PlacePlayer();
 
         if (generateTilemap)
         {
@@ -93,5 +98,35 @@ public class DungeonMapGenerator : MonoBehaviour
 
         mapBuffer.GetData(map);
         mapBuffer.Dispose();
+    }
+
+    private void PlacePlayer()
+    {
+        for (int x = 0; x < mapSize; x++)
+        {
+            for (int y = 0; y < mapSize; y++)
+            {
+                int adjecentEmptyTileCounter = 0;
+
+                for (int gridX = x - 1; gridX <= x + 1; gridX++)
+                {
+                    for (int gridY = y - 1; gridY <= y + 1; gridY++)
+                    {
+                        int mapIndex = gridX + gridY * mapSize;
+                        if (mapIndex >= map.Length || mapIndex < 0) { continue; }
+
+                        if (map[mapIndex] == 0)
+                        {
+                            adjecentEmptyTileCounter++;
+                        }
+                    }
+                }
+
+                if (adjecentEmptyTileCounter == 9)
+                {
+                    playerPrefab.transform.position = new Vector3(x, y, 0);
+                }
+            }
+        }
     }
 }
