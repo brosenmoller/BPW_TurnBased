@@ -14,7 +14,7 @@ public class DungeonMapGenerator : MonoBehaviour
     [SerializeField, Range(0, 9)] private int wallCuttoff;
 
     [Header("Finalization")]
-    [SerializeField, Range(0, 100)] private int cleanupIterations;
+    [SerializeField, Range(0, 20)] private int cleanupIterations;
     [SerializeField, Range(0, 20)] private float minSizeRoomPercentage;
 
     [Header("Tilemap Generation")]
@@ -82,21 +82,14 @@ public class DungeonMapGenerator : MonoBehaviour
         removeJaggedEdgesComputeShader.SetBuffer(0, "map", mapBuffer);
         removeJaggedEdgesComputeShader.SetInt("mapSize", mapSize);
 
-        removeJaggedEdgesComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
-        
-
         removeOneLineCorridorsComputeShader.SetBuffer(0, "map", mapBuffer);
         removeOneLineCorridorsComputeShader.SetInt("mapSize", mapSize);
 
-        removeOneLineCorridorsComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
-
-        //gridCleanupComputeShader.SetBuffer(0, "map", mapBuffer);
-        //gridCleanupComputeShader.SetInt("mapSize", mapSize);
-
-        //for (int i = 0; i < cleanupIterations; i++)
-        //{
-        //    gridCleanupComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
-        //}
+        for (int i = 0; i < cleanupIterations; i++)
+        {
+            removeJaggedEdgesComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
+            removeOneLineCorridorsComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
+        }
 
         mapBuffer.GetData(map);
         mapBuffer.Dispose();
