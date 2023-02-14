@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UIElements;
 
 public class DungeonMapGenerator : MonoBehaviour
 {
@@ -124,7 +123,7 @@ public class DungeonMapGenerator : MonoBehaviour
 
                 if (adjecentEmptyTileCounter == 9)
                 {
-                    playerPrefab.transform.position = new Vector3(x, y, 0);
+                    playerPrefab.transform.position = new Vector3(x + .5f, y + .5f, 0);
                 }
             }
         }
