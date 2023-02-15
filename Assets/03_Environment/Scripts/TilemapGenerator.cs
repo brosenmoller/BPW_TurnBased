@@ -6,8 +6,9 @@ public class TilemapGenerator : MonoBehaviour
     [Header("References")]
     [SerializeField] private Tilemap colliderTilemap;
     [SerializeField] private Tilemap groundTilemap;
-    [SerializeField] private RuleTile filledRuleTile;
-    [SerializeField] private RuleTile emptyRuleTile;
+    [SerializeField] private RuleTile roofRuleTile;
+    [SerializeField] private RuleTile floorRuleTile;
+    [SerializeField] private RuleTile wallRuleTile;
 
     public void GenerateTilemap(int[] map, int mapSize)
     {
@@ -18,14 +19,24 @@ public class TilemapGenerator : MonoBehaviour
         {
             for (int y = 0; y < mapSize; y++)
             {
-                if (map[x + y * mapSize] == 1)
+                if (map[x + y * mapSize] == 0)
                 {
-                    colliderTilemap.SetTile(new Vector3Int(x, y, 0), filledRuleTile);
+                    groundTilemap.SetTile(new Vector3Int(x, y, 0), floorRuleTile);
+                    continue;
                 }
-                else
+
+                
+                int mapIndex = x + (y - 1) * mapSize;
+                if (mapIndex < map.Length && mapIndex >= 0)
                 {
-                    groundTilemap.SetTile(new Vector3Int(x, y, 0), emptyRuleTile);
+                    if (map[mapIndex] == 0)
+                    {
+                        colliderTilemap.SetTile(new Vector3Int(x, y, 0), wallRuleTile);
+                        continue;
+                    }
                 }
+
+                colliderTilemap.SetTile(new Vector3Int(x, y, 0), roofRuleTile);
             }
         }
     }

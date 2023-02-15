@@ -8,11 +8,13 @@ public static class GridRoomDetection
     private static int[] map;
     private static int minRoomSize;
     private static int mapSize;
+    private static int maxCorridorSize;
 
-    public static int[] CleanUpRoomsInGrid(int[] map, int minRoomSize, int mapSize)
+    public static int[] CleanUpRoomsInGrid(int[] map, int minRoomSize, int mapSize, int maxCorridorSize)
     {
         GridRoomDetection.map = map;
         GridRoomDetection.minRoomSize = minRoomSize;
+        GridRoomDetection.maxCorridorSize = maxCorridorSize;
         GridRoomDetection.mapSize = mapSize;
 
         rooms.Clear();
@@ -44,9 +46,7 @@ public static class GridRoomDetection
     }
     private static void RemoveSmallRooms()
     {
-        HashSet<Room> roomsToRemove = new();
-
-        for (int i = 0; i < rooms.Count; i++)
+        for (int i = rooms.Count - 1; i >= 0; i--)
         {
             if (rooms[i].roomSize < minRoomSize)
             {
@@ -55,15 +55,11 @@ public static class GridRoomDetection
                     map[coordinate.x + coordinate.y * mapSize] = 1;
                 }
 
-                roomsToRemove.Add(rooms[i]);
-                Room.largestRoom.isAccesableFromLargestRoom = true;
+                rooms.RemoveAt(i);
             }
         }
 
-        foreach (Room roomMarkedForRemoval in roomsToRemove)
-        {
-            rooms.Remove(roomMarkedForRemoval);
-        }
+        Room.largestRoom.isAccesableFromLargestRoom = true;
     }
 
     private static void ConnectClosestRooms()
@@ -79,7 +75,6 @@ public static class GridRoomDetection
 
         while (unconnectedRooms.Count > 0)
         {
-            Debug.Log(unconnectedRooms.Count);
             FindConnectionsBetweenRooms(connectedRooms, unconnectedRooms, true);
             GetConnectedAndUnConnectedLists(out connectedRooms, out unconnectedRooms);
         }
@@ -141,25 +136,13 @@ public static class GridRoomDetection
 
             if (connectionFound && !searchForBestOverallConnection) 
             { 
-                Room.ConnectRooms(roomA, closestRoomB);
-                Debug.DrawLine(
-                    CoordinateToWorldPosition(closestEdgeRoomA),
-                    CoordinateToWorldPosition(closestEdgeRoomB),
-                    Color.yellow,
-                    10
-                );
+                Room.ConnectRooms(roomA, closestRoomB, closestEdgeRoomA, closestEdgeRoomB);
             }
         }
 
         if (connectionFound && searchForBestOverallConnection)
         {
-            Room.ConnectRooms(closestRoomA, closestRoomB);
-            Debug.DrawLine(
-                CoordinateToWorldPosition(closestEdgeRoomA),
-                CoordinateToWorldPosition(closestEdgeRoomB),
-                Color.yellow,
-                10
-            );
+            Room.ConnectRooms(closestRoomA, closestRoomB, closestEdgeRoomA, closestEdgeRoomB);
         }
     }
 
@@ -250,13 +233,36 @@ public static class GridRoomDetection
             }
         }
 
-        public static void ConnectRooms(Room roomA, Room roomB)
+        public static void ConnectRooms(Room roomA, Room roomB, Vector2Int edgeRoomA, Vector2Int edgeRoomB)
         {
             if (roomA.isAccesableFromLargestRoom) { roomB.SetIsAccesableFromLargestRoom(); }
             else if (roomB.isAccesableFromLargestRoom) { roomA.SetIsAccesableFromLargestRoom(); }
 
             roomA.connectedRooms.Add(roomB);
             roomB.connectedRooms.Add(roomA);
+
+            int xDirection = edgeRoomA.x < edgeRoomB.x ? 1 : -1;
+            for (int x = edgeRoomA.x; x != edgeRoomB.x; x += xDirection)
+            {
+                map[x + edgeRoomA.y * mapSize] = 0;
+                map[x + (edgeRoomA.y + maxCorridorSize) * mapSize] = 0;
+                map[x + (edgeRoomA.y - maxCorridorSize) * mapSize] = 0;
+            }
+
+            int yDirection = edgeRoomA.y < edgeRoomB.y ? 1 : -1;
+            for (int y = edgeRoomA.y; y != edgeRoomB.y; y += yDirection)
+            {
+                map[edgeRoomB.x + y * mapSize] = 0;
+                map[(edgeRoomB.x + maxCorridorSize) + y * mapSize] = 0;
+                map[(edgeRoomB.x - maxCorridorSize) + y * mapSize] = 0;
+            }
+
+            //Debug.DrawLine(
+            //    CoordinateToWorldPosition(edgeRoomA),
+            //    CoordinateToWorldPosition(edgeRoomB),
+            //    Color.yellow,
+            //    10
+            //);
         }
         public bool IsConnected(Room otherRoom) => connectedRooms.Contains(otherRoom);
     }

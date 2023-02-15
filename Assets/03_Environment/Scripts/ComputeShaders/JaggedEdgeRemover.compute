@@ -20,4 +20,18 @@ void CSMain (uint3 id : SV_DispatchThreadID)
             map[id.x + id.y * mapSize] = 1;
         }
     }
+    else 
+    {
+        int adjecentFloorCounter = 0;
+
+        if (map[(id.x - 1) + id.y * mapSize] == 0) { adjecentFloorCounter++; }
+        if (map[(id.x + 1) + id.y * mapSize] == 0) { adjecentFloorCounter++; }
+        if (map[id.x + (id.y - 1) * mapSize] == 0) { adjecentFloorCounter++; }
+        if (map[id.x + (id.y + 1) * mapSize] == 0) { adjecentFloorCounter++; }
+        
+        if (adjecentFloorCounter == 3)
+        {
+            map[id.x + id.y * mapSize] = 0;
+        }
+    }
 }

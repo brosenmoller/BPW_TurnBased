@@ -16,6 +16,7 @@ public class DungeonMapGenerator : MonoBehaviour
     [Header("Finalization")]
     [SerializeField, Range(0, 20)] private int cleanupIterations;
     [SerializeField, Range(0, 20)] private float minSizeRoomPercentage;
+    [SerializeField, Range(1, 10)] private int maxCorridorSize;
 
     [Header("Player")]
     [SerializeField] private GameObject playerPrefab;
@@ -35,11 +36,15 @@ public class DungeonMapGenerator : MonoBehaviour
     public void GenerateMap()
     {
         map = new int[mapSize * mapSize];
+
         RandomFillMap();
         ComputeMap();
 
         minRoomSize = (int)(minSizeRoomPercentage / 100f * (mapSize * mapSize));
-        map = GridRoomDetection.CleanUpRoomsInGrid(map, minRoomSize, mapSize);
+        map = GridRoomDetection.CleanUpRoomsInGrid(map, minRoomSize, mapSize, maxCorridorSize);
+
+        ComputeMap(true);
+        //map = AddBorderToMap();
 
         PlacePlayer();
 
@@ -47,6 +52,30 @@ public class DungeonMapGenerator : MonoBehaviour
         {
             tilemapGenerator.GenerateTilemap(map, mapSize);
         }
+    }
+
+    private int[] AddBorderToMap()
+    {
+        int borderSize = 1;
+        int borderedMapSize = mapSize + borderSize * 2;
+        int[] borderedMap = new int[borderedMapSize * borderedMapSize];
+
+        for (int x = 0; x < borderedMapSize; x++)
+        {
+            for (int y = 0; y < borderedMapSize; y++)
+            {
+                if (x >= borderSize && x < mapSize + borderSize && y >= borderSize && y < mapSize + borderSize)
+                {
+                    borderedMap[x + y * borderedMapSize] = map[(x - borderSize) + (y - borderSize) * mapSize];
+                }
+                else
+                {
+                    borderedMap[x + y * borderedMapSize] = 1;
+                }
+            }
+        }
+
+        return borderedMap;
     }
 
     private void RandomFillMap()
@@ -69,18 +98,21 @@ public class DungeonMapGenerator : MonoBehaviour
         }
     }
 
-    private void ComputeMap()
+    private void ComputeMap(bool onlyCleaning = false)
     {
         ComputeBuffer mapBuffer = new(map.Length, sizeof(int));
         mapBuffer.SetData(map);
 
-        cellularAutomataComputeShader.SetBuffer(0, "map", mapBuffer);
-        cellularAutomataComputeShader.SetInt("wallCutoff", wallCuttoff);
-        cellularAutomataComputeShader.SetInt("mapSize", mapSize);
-
-        for (int i = 0; i < smoothInterations; i++)
+        if (!onlyCleaning)
         {
-            cellularAutomataComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
+            cellularAutomataComputeShader.SetBuffer(0, "map", mapBuffer);
+            cellularAutomataComputeShader.SetInt("wallCutoff", wallCuttoff);
+            cellularAutomataComputeShader.SetInt("mapSize", mapSize);
+
+            for (int i = 0; i < smoothInterations; i++)
+            {
+                cellularAutomataComputeShader.Dispatch(0, mapSize / 16, mapSize / 16, 1);
+            }
         }
 
         removeJaggedEdgesComputeShader.SetBuffer(0, "map", mapBuffer);
