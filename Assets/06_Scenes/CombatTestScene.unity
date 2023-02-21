@@ -4840,6 +4840,10 @@ Tilemap:
   m_TileAssetArray:
   - m_RefCount: 456
     m_Data: {fileID: 11400000, guid: 8382876cd4e2e19408d322f5808cdd7a, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileSpriteArray:
   - m_RefCount: 24
     m_Data: {fileID: -2143483545, guid: f1c9f8471cde3084e98106bb0363a7d0, type: 3}
@@ -4851,6 +4855,18 @@ Tilemap:
     m_Data: {fileID: -1137434639, guid: f1c9f8471cde3084e98106bb0363a7d0, type: 3}
   - m_RefCount: 4
     m_Data: {fileID: 31043976, guid: f1c9f8471cde3084e98106bb0363a7d0, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileMatrixArray:
   - m_RefCount: 47
     m_Data:
@@ -10496,7 +10512,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 3.4453125
+  orthographic size: 0
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

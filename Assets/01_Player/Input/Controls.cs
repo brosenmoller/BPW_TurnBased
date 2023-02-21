@@ -55,31 +55,13 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Attack"",
+                    ""name"": ""SelectLocation"",
                     ""type"": ""Button"",
-                    ""id"": ""632f601e-bf84-46ba-a192-62a1e494e3d3"",
+                    ""id"": ""4e8f4ce3-91a3-423e-8d54-62e7f0c9226a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Dodge"",
-                    ""type"": ""Button"",
-                    ""id"": ""76002980-0b2f-4240-a06c-7d1244c94db8"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""SwitchAttack"",
-                    ""type"": ""Value"",
-                    ""id"": ""900139e5-0152-4a6d-9c1f-cfce8c502b94"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -151,28 +133,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6869fbd5-29e7-488d-832a-0fb0a2984627"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard_Mouse"",
-                    ""action"": ""Attack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""c893bb65-f234-40a4-a27e-eb2a425aef08"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Attack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""42fbd3cb-bda5-4a27-a35e-90cc0b5e90f0"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
@@ -184,100 +144,23 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b09ef7a5-55a9-435f-9755-defbbdc0e13c"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard_Mouse"",
-                    ""action"": ""Dodge"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3dfef0d1-cd56-4a40-824a-06eae34bedc5"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Dodge"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""Q and E"",
-                    ""id"": ""bb3a2586-5dfd-499b-a79b-e280b45e8701"",
-                    ""path"": ""1DAxis(whichSideWins=2)"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SwitchAttack"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""570a0021-7db9-4679-9c50-9a9898d99dac"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard_Mouse"",
-                    ""action"": ""SwitchAttack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""f319a5db-5085-43ad-871b-2bb55095b7df"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard_Mouse"",
-                    ""action"": ""SwitchAttack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""Bumpers"",
-                    ""id"": ""cb3ae950-182f-4f3c-9f62-a7e8b51802b2"",
-                    ""path"": ""1DAxis(whichSideWins=2)"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SwitchAttack"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""72900419-0077-4b3a-9e2d-cc396743905e"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""SwitchAttack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""6a9179fe-82c0-4d87-a95f-180147e49bb4"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""SwitchAttack"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
                     ""id"": ""74bd842e-f2bf-4623-a449-8b55b3c33fa4"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard_Mouse"",
                     ""action"": ""MouseAiming"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1cb60639-39e6-48e9-abe4-5227d950a992"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard_Mouse"",
+                    ""action"": ""SelectLocation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -319,9 +202,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Default_Movement = m_Default.FindAction("Movement", throwIfNotFound: true);
         m_Default_GamepadAiming = m_Default.FindAction("GamepadAiming", throwIfNotFound: true);
         m_Default_MouseAiming = m_Default.FindAction("MouseAiming", throwIfNotFound: true);
-        m_Default_Attack = m_Default.FindAction("Attack", throwIfNotFound: true);
-        m_Default_Dodge = m_Default.FindAction("Dodge", throwIfNotFound: true);
-        m_Default_SwitchAttack = m_Default.FindAction("SwitchAttack", throwIfNotFound: true);
+        m_Default_SelectLocation = m_Default.FindAction("SelectLocation", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -384,9 +265,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Default_Movement;
     private readonly InputAction m_Default_GamepadAiming;
     private readonly InputAction m_Default_MouseAiming;
-    private readonly InputAction m_Default_Attack;
-    private readonly InputAction m_Default_Dodge;
-    private readonly InputAction m_Default_SwitchAttack;
+    private readonly InputAction m_Default_SelectLocation;
     public struct DefaultActions
     {
         private @Controls m_Wrapper;
@@ -394,9 +273,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_Default_Movement;
         public InputAction @GamepadAiming => m_Wrapper.m_Default_GamepadAiming;
         public InputAction @MouseAiming => m_Wrapper.m_Default_MouseAiming;
-        public InputAction @Attack => m_Wrapper.m_Default_Attack;
-        public InputAction @Dodge => m_Wrapper.m_Default_Dodge;
-        public InputAction @SwitchAttack => m_Wrapper.m_Default_SwitchAttack;
+        public InputAction @SelectLocation => m_Wrapper.m_Default_SelectLocation;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -415,15 +292,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @MouseAiming.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMouseAiming;
                 @MouseAiming.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMouseAiming;
                 @MouseAiming.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMouseAiming;
-                @Attack.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
-                @Attack.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
-                @Attack.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnAttack;
-                @Dodge.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnDodge;
-                @Dodge.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnDodge;
-                @Dodge.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnDodge;
-                @SwitchAttack.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnSwitchAttack;
-                @SwitchAttack.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnSwitchAttack;
-                @SwitchAttack.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnSwitchAttack;
+                @SelectLocation.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnSelectLocation;
+                @SelectLocation.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnSelectLocation;
+                @SelectLocation.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnSelectLocation;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
@@ -437,15 +308,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @MouseAiming.started += instance.OnMouseAiming;
                 @MouseAiming.performed += instance.OnMouseAiming;
                 @MouseAiming.canceled += instance.OnMouseAiming;
-                @Attack.started += instance.OnAttack;
-                @Attack.performed += instance.OnAttack;
-                @Attack.canceled += instance.OnAttack;
-                @Dodge.started += instance.OnDodge;
-                @Dodge.performed += instance.OnDodge;
-                @Dodge.canceled += instance.OnDodge;
-                @SwitchAttack.started += instance.OnSwitchAttack;
-                @SwitchAttack.performed += instance.OnSwitchAttack;
-                @SwitchAttack.canceled += instance.OnSwitchAttack;
+                @SelectLocation.started += instance.OnSelectLocation;
+                @SelectLocation.performed += instance.OnSelectLocation;
+                @SelectLocation.canceled += instance.OnSelectLocation;
             }
         }
     }
@@ -473,8 +338,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnGamepadAiming(InputAction.CallbackContext context);
         void OnMouseAiming(InputAction.CallbackContext context);
-        void OnAttack(InputAction.CallbackContext context);
-        void OnDodge(InputAction.CallbackContext context);
-        void OnSwitchAttack(InputAction.CallbackContext context);
+        void OnSelectLocation(InputAction.CallbackContext context);
     }
 }

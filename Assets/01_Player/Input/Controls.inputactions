@@ -33,31 +33,13 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Attack",
+                    "name": "SelectLocation",
                     "type": "Button",
-                    "id": "632f601e-bf84-46ba-a192-62a1e494e3d3",
+                    "id": "4e8f4ce3-91a3-423e-8d54-62e7f0c9226a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Dodge",
-                    "type": "Button",
-                    "id": "76002980-0b2f-4240-a06c-7d1244c94db8",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SwitchAttack",
-                    "type": "Value",
-                    "id": "900139e5-0152-4a6d-9c1f-cfce8c502b94",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -129,28 +111,6 @@
                 },
                 {
                     "name": "",
-                    "id": "6869fbd5-29e7-488d-832a-0fb0a2984627",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard_Mouse",
-                    "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c893bb65-f234-40a4-a27e-eb2a425aef08",
-                    "path": "<Gamepad>/rightTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "42fbd3cb-bda5-4a27-a35e-90cc0b5e90f0",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
@@ -162,100 +122,23 @@
                 },
                 {
                     "name": "",
-                    "id": "b09ef7a5-55a9-435f-9755-defbbdc0e13c",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard_Mouse",
-                    "action": "Dodge",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3dfef0d1-cd56-4a40-824a-06eae34bedc5",
-                    "path": "<Gamepad>/leftTrigger",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Dodge",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "Q and E",
-                    "id": "bb3a2586-5dfd-499b-a79b-e280b45e8701",
-                    "path": "1DAxis(whichSideWins=2)",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SwitchAttack",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "570a0021-7db9-4679-9c50-9a9898d99dac",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard_Mouse",
-                    "action": "SwitchAttack",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "f319a5db-5085-43ad-871b-2bb55095b7df",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard_Mouse",
-                    "action": "SwitchAttack",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "Bumpers",
-                    "id": "cb3ae950-182f-4f3c-9f62-a7e8b51802b2",
-                    "path": "1DAxis(whichSideWins=2)",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SwitchAttack",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "72900419-0077-4b3a-9e2d-cc396743905e",
-                    "path": "<Gamepad>/leftShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "SwitchAttack",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "6a9179fe-82c0-4d87-a95f-180147e49bb4",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "SwitchAttack",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
                     "id": "74bd842e-f2bf-4623-a449-8b55b3c33fa4",
                     "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard_Mouse",
                     "action": "MouseAiming",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1cb60639-39e6-48e9-abe4-5227d950a992",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard_Mouse",
+                    "action": "SelectLocation",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
