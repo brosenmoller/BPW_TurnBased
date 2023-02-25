@@ -629,7 +629,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -637,6 +637,69 @@ TextureImporter:
       bones: []
       spriteID: 05ad4a0d0d8036e408f5440d0ac682ae
       internalID: 1857914848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_TileSet_Stripped_25
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48abd4d0deffdd74f817e6a0a65d5648
+      internalID: 1132433768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_TileSet_Stripped_26
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9784de6d7f5255c4cad41680167d4b96
+      internalID: -1447503697
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_TileSet_Stripped_27
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 688d6d07d0aad7b4f8815348c3943a8e
+      internalID: -324140044
       vertices: []
       indices: 
       edges: []
@@ -652,8 +715,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Dungeon_TileSet_Stripped_25: 1132433768
       Dungeon_TileSet_Stripped_16: 241232675
       Dungeon_TileSet_Stripped_22: -2143483545
+      Dungeon_TileSet_Stripped_27: -324140044
       Dungeon_TileSet_Stripped_24: 1857914848
       Dungeon_TileSet_Stripped_2: 335418884
       Dungeon_TileSet_Stripped_7: -104572340
@@ -677,6 +742,7 @@ TextureImporter:
       Dungeon_TileSet_Stripped_8: -31728177
       Dungeon_TileSet_Stripped_3: 1965776489
       Dungeon_TileSet_Stripped_5: -1940363702
+      Dungeon_TileSet_Stripped_26: -1447503697
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
