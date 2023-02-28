@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
@@ -11,9 +10,9 @@ public class GameManager : MonoBehaviour
     public static TimerManager TimerManager { get; private set; }
     public static SaveManager SaveManager { get; private set; }
     public static EventManager EventManager { get; private set; }
+    public static InputManager InputManager { get; private set; }
 
     private Manager[] activeManagers;
-    [HideInInspector] public List<CustomBehaviour> activeCustomBehavioursInCurrentScene;
 
     private void Awake()
     {
@@ -40,8 +39,20 @@ public class GameManager : MonoBehaviour
         TimerManager = new TimerManager();
         SaveManager = new SaveManager();
         EventManager = new EventManager();
+        InputManager = new InputManager();
 
-        activeManagers = new Manager[] { AudioManager, TimerManager, SaveManager, EventManager };
+        activeManagers = new Manager[] { 
+            AudioManager, 
+            TimerManager, 
+            SaveManager,
+            EventManager,
+            InputManager
+        };
+
+        foreach (Manager manager in activeManagers)
+        {
+            manager.Setup();
+        }
     }
 
     private void OnEnable()

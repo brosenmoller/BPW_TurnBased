@@ -9,26 +9,21 @@ public class MoveAbility : MonoBehaviour
     private Rigidbody2D rigidBody2D;
     private Vector2 movement;
 
-    private Controls controls;
-
     private void Awake()
     {
         rigidBody2D = GetComponent<Rigidbody2D>();
     }
 
-    private void OnEnable()
+    private void Start()
     {
-        controls = new Controls();
-        controls.Enable();
-        controls.Default.Movement.performed += SetMovement;
-        controls.Default.Movement.canceled += ResetMovement;
+        GameManager.InputManager.controls.Default.Movement.performed += SetMovement;
+        GameManager.InputManager.controls.Default.Movement.canceled += ResetMovement;
     }
 
     public void OnDisable()
     {
-        controls.Default.Movement.performed -= SetMovement;
-        controls.Default.Movement.canceled -= ResetMovement;
-        controls.Disable();
+        GameManager.InputManager.controls.Default.Movement.performed -= SetMovement;
+        GameManager.InputManager.controls.Default.Movement.canceled -= ResetMovement;
     }
 
     public void SetMovement(InputAction.CallbackContext context)
