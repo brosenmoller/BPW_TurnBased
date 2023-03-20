@@ -1,7 +1,6 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-[DisallowMultipleComponent]
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }

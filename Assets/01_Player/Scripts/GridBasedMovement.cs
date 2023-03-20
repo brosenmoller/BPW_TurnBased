@@ -1,4 +1,5 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Tilemaps;
@@ -17,20 +18,26 @@ public class GridBasedMovement : MonoBehaviour
     [SerializeField] private Tilemap movementRangeOverlayTilemap;
     [SerializeField] private TileBase movementRangeOverlayRuleTile;
 
+    private CombatRoomController combatRoomController;
+
     private NavMeshAgent agent;
     private Camera mainCamera;
 
     private Vector3 cursorTargetPosition;
 
+    private Vector3Int[] tilesInMovementRange;
+
     private void Awake()
     {
         mainCamera = Camera.main;
         agent = GetComponent<NavMeshAgent>();
+        combatRoomController = FindObjectOfType<CombatRoomController>();
     }
 
     private void Start()
     {
         agent.isStopped = true;
+        GenerateMovementRangeOverlay();
 
         GameManager.InputManager.controls.Default.MouseAiming.performed += ctx => MoveCursor(ctx.ReadValue<Vector2>());
         GameManager.InputManager.controls.Default.SelectLocation.performed += _ => GoToCursor();
@@ -63,14 +70,12 @@ public class GridBasedMovement : MonoBehaviour
 
         Vector3 mousePosition = mainCamera.ScreenToWorldPoint(mouseScreenPosition);
         Vector3Int mouseGridPosition = grid.WorldToCell(mousePosition);
-        Vector3Int playerGridPosition = grid.WorldToCell(transform.position);
         
-        if (Vector3Int.Distance(mouseGridPosition, playerGridPosition) > movementRange) 
+        
+        if (tilesInMovementRange.Contains(mouseGridPosition)) 
         {
-            return;
-        }
-
-        cursorTargetPosition = mouseGridPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
+            cursorTargetPosition = mouseGridPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
+        }    
     }
 
     private void GenerateMovementRangeOverlay()
@@ -78,17 +83,60 @@ public class GridBasedMovement : MonoBehaviour
         if (movementRange <= 1) { return; }
 
         Vector3Int playerGridPosition = grid.WorldToCell(transform.position);
+        tilesInMovementRange = CalculateMovementRangeTiles(playerGridPosition);
 
-        for (int x = -movementRange; x < movementRange; x++)
+        foreach (Vector3Int coordinate in tilesInMovementRange)
         {
-            for (int y = -movementRange; y < movementRange; y++)
+            movementRangeOverlayTilemap.SetTile(coordinate, movementRangeOverlayRuleTile);
+        }
+    }
+
+    private Vector3Int[] CalculateMovementRangeTiles(Vector3Int referencePosition)
+    {
+        Queue<Node> nodeQueue = new();
+        List<Vector3Int> validPositions = new();
+
+        nodeQueue.Enqueue(new Node(0, 0, 0));
+        validPositions.Add(referencePosition);
+
+        while (nodeQueue.Count > 0)
+        {
+            Node currentNode = nodeQueue.Dequeue();
+
+            if (currentNode.cost >= movementRange) { continue; }
+
+            for (int x = -1; x <= 1; x++)
             {
-                Vector3Int gridPosition = new Vector3Int(x, y) + playerGridPosition;
-                Debug.Log(gridPosition);
-                if (Vector3Int.Distance(gridPosition, playerGridPosition) > movementRange) { continue; }
-                
-                movementRangeOverlayTilemap.SetTile(gridPosition, movementRangeOverlayRuleTile);
+                for (int y = -1; y <= 1; y++)
+                {
+                    if (Mathf.Abs(x) == Mathf.Abs(y)) { continue; }
+
+                    Vector3Int coordinate = new Vector3Int(currentNode.x, currentNode.y) + new Vector3Int(x, y) + referencePosition;
+                    if (validPositions.Contains(coordinate)) { continue; }
+                    if (!combatRoomController.memberCoordinates.Contains((Vector2Int)coordinate)) { continue; }
+
+                    validPositions.Add(coordinate);
+
+                    Node newNode = new(currentNode.x + x, currentNode.y + y, currentNode.cost + 1);
+                    nodeQueue.Enqueue(newNode);
+                }
             }
+        }
+
+        return validPositions.ToArray();
+    }
+
+    private struct Node
+    {
+        public int x;
+        public int y;
+        public int cost;
+
+        public Node(int x, int y, int cost = int.MaxValue)
+        {
+            this.x = x;
+            this.y = y;
+            this.cost = cost;
         }
     }
 }

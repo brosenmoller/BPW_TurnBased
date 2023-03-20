@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -733635939
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 678370150, guid: b4357846671e0ba40ae2019403f256c6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -93,8 +93,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6482489094538115602}
-  - component: {fileID: 2520864486404787384}
   - component: {fileID: 1323091315200397871}
+  - component: {fileID: 5415709676737118784}
   m_Layer: 0
   m_Name: TurnBasedPlayer
   m_TagString: Player
@@ -118,24 +118,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!114 &2520864486404787384
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6482489094538115601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96a8245fdca535e4daecaa2cfbe01bc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementRange: 3
-  cursorDragSpeed: 5
-  cursor: {fileID: 0}
-  grid: {fileID: 0}
-  groundTilemap: {fileID: 0}
-  floorRuleTile: {fileID: 0}
 --- !u!195 &1323091315200397871
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -146,8 +128,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.3
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 5
+  m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 0
   m_StoppingDistance: 0
@@ -158,3 +140,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5415709676737118784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6482489094538115601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54eae33be9cbfb541919553a34f65137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementRange: 4
+  grid: {fileID: 0}
+  cursorDragSpeed: 10
+  cursor: {fileID: 0}
