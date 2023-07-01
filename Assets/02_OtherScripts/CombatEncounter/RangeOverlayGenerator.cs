@@ -4,20 +4,34 @@ using UnityEngine.Tilemaps;
 public class RangeOverlayGenerator : MonoBehaviour 
 {
     [Header("References")]
-    [SerializeField] private Tilemap movementRangeOverlayTilemap;
+    [SerializeField] private Tilemap rangeOverlayTilemap;
     [SerializeField] private TileBase movementRangeOverlayRuleTile;
+    [SerializeField] private TileBase enemyHighlightOverlayTile;
 
-    public void GenerateMovementRangeOverlay(Vector3Int[] tilePositions)
+    public void GenerateMovementRangeOverlay(Vector3Int[] WalkableTiles, Vector3Int[] enemyTiles)
     {
-        foreach (Vector3Int coordinate in tilePositions)
+        foreach (Vector3Int coordinate in WalkableTiles)
         {
-            movementRangeOverlayTilemap.SetTile(coordinate, movementRangeOverlayRuleTile);
+            rangeOverlayTilemap.SetTile(coordinate, movementRangeOverlayRuleTile);
+        }
+
+        foreach (Vector3Int coordinate in enemyTiles)
+        {
+            rangeOverlayTilemap.SetTile(coordinate, enemyHighlightOverlayTile);
         }
     }
 
-    public void ClearMovementRangeOverlay()
+    public void GenerateAttackRangeOverlay(Vector3Int[] attackRangeTiles)
     {
-        movementRangeOverlayTilemap.ClearAllTiles();
+        foreach (Vector3Int coordinate in attackRangeTiles)
+        {
+            rangeOverlayTilemap.SetTile(coordinate, enemyHighlightOverlayTile);
+        }
+    }
+
+    public void ClearRangeOverlay()
+    {
+        rangeOverlayTilemap.ClearAllTiles();
     }
 }
 

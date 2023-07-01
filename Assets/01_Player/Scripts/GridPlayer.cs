@@ -1,20 +1,21 @@
 ﻿using UnityEngine;
-using System.Linq;
-using static UnityEngine.InputSystem.InputAction;
+using UnityEngine.InputSystem;
 
-public class GridPlayer : GridTileContent
+public class GridPlayer : GridTileContent, IDamageAble
 {
     [Header("Other")]
     [SerializeField] protected float cursorDragSpeed;
     [SerializeField] protected Transform cursor;
+    [SerializeField] protected SpriteRenderer cursorSprite;
 
     private Camera mainCamera;
-
     private Vector3 cursorTargetPosition;
+    private GridTileContent currentTarget;
 
-    private void Start()
+    public override void OnAwake()
     {
         mainCamera = Camera.main;
+        ContentType = GridTileContentType.Player;
     }
 
     public override void OnTurnStart()
@@ -22,25 +23,38 @@ public class GridPlayer : GridTileContent
         GenerateMovementRangeOverlay();
 
         GameManager.InputManager.controls.Default.MouseAiming.performed += MoveCursor;
-        GameManager.InputManager.controls.Default.SelectLocation.performed += GoToCursor;
+        GameManager.InputManager.controls.Default.SelectLocation.performed += SelectTile;
     }
 
     private void OnTurnEnd()
     {
         GameManager.InputManager.controls.Default.MouseAiming.performed -= MoveCursor;
-        GameManager.InputManager.controls.Default.SelectLocation.performed -= GoToCursor;
+        GameManager.InputManager.controls.Default.SelectLocation.performed -= SelectTile;
 
-        combatRoomController.CurrentTurnEnd();
+        TurnEnd();
     }
 
-    private void GoToCursor(CallbackContext callbackContext)
+    protected void GenerateMovementRangeOverlay()
     {
-        agent.SetDestination(cursorTargetPosition);
-        agent.isStopped = false;
-        rangeOverlayGenerator.ClearMovementRangeOverlay();
+        if (movementRange <= 1) { return; }
+
+        Vector3Int playerGridPosition = grid.WorldToCell(transform.position);
+        CalculateSurroundingTiles(playerGridPosition);
+        rangeOverlayGenerator.GenerateMovementRangeOverlay(surroundingTiles[GridTileContentType.Empty].ToArray(), surroundingTiles[GridTileContentType.Enemy].ToArray());
     }
 
-    private void MoveCursor(CallbackContext callbackContext)
+    private void SelectTile(InputAction.CallbackContext callbackContext)
+    {
+        if (currentTarget == null || currentTarget.ContentType == GridTileContentType.Empty)
+        {
+            agent.SetDestination(cursorTargetPosition);
+            agent.isStopped = false;
+            rangeOverlayGenerator.ClearRangeOverlay();
+        }
+        
+    }
+
+    private void MoveCursor(InputAction.CallbackContext callbackContext)
     {
         Vector2 mouseScreenPosition = callbackContext.ReadValue<Vector2>();
         if (!agent.isStopped) { return; }
@@ -48,11 +62,13 @@ public class GridPlayer : GridTileContent
         Vector3 mousePosition = mainCamera.ScreenToWorldPoint(mouseScreenPosition);
         Vector3Int mouseGridPosition = grid.WorldToCell(mousePosition);
 
+        if (!surroundingTiles[GridTileContentType.Empty].Contains(mouseGridPosition)) { return; }
 
-        if (tilesInMovementRange.Contains(mouseGridPosition))
-        {
-            cursorTargetPosition = mouseGridPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
-        }
+        cursorTargetPosition = mouseGridPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
+        currentTarget = combatRoomController.gridTilesContent[mouseGridPosition];
+
+        if (currentTarget == null || currentTarget.ContentType == GridTileContentType.Empty) { cursorSprite.color = Color.blue; }
+        else if (currentTarget.ContentType == GridTileContentType.Enemy) { cursorSprite.color = Color.red; }
     }
 
     private void FixedUpdate()
@@ -64,9 +80,13 @@ public class GridPlayer : GridTileContent
 
         if (agent.remainingDistance <= agent.stoppingDistance && agent.isStopped == false)
         {
-            agent.isStopped = true;
             OnTurnEnd();
         }
+    }
+
+    public void Damage(int damage)
+    {
+        
     }
 }
 
