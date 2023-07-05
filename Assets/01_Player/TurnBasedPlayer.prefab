@@ -153,5 +153,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementRange: 4
+  weapon: {fileID: 0}
+  maxHealth: 0
   cursorDragSpeed: 10
   cursor: {fileID: 0}
+  cursorSprite: {fileID: 0}

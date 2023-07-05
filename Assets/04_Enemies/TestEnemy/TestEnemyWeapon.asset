@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da2de284edaf1804f8a7a4f520f0e63e, type: 3}
-  m_Name: Gun
+  m_Name: TestEnemyWeapon
   m_EditorClassIdentifier: 
-  weaponName: Gun
-  weaponDescription: Gun
+  weaponName: TestEnemtWeapon
+  weaponDescription: asdfa
   damage: 5
-  force: 5
-  attackRange: 20
+  force: 4
+  attackRange: 4
   attackSound: {fileID: 0}

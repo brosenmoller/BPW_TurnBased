@@ -13,7 +13,6 @@ public class UIViewManager : Manager
     public override void Setup()
     {
         SetupViewDictionary();
-        Debug.Log(viewsDictionary.Count);
     }
 
     private void SetupViewDictionary()

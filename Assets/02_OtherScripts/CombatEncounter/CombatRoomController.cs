@@ -10,19 +10,19 @@ public class CombatRoomController : MonoBehaviour
     
     private Grid grid;
 
-    public Dictionary<Vector3Int, GridTileContent> gridTilesContent = new();
+    public Dictionary<Vector3Int, TileContent> gridTilesContent = new();
     
-    private List<GridEnemy> enemyList;
-    private GridPlayer player;
+    private List<TileEnemy> enemyList;
+    private TilePlayer player;
 
-    private readonly List<GridTileContent> turnOrdering = new();
+    private readonly List<TileContent> turnOrdering = new();
     private int currentTurnIndex;
 
     private void Awake()
     {
         grid = FindAnyObjectByType<Grid>();
-        enemyList = FindObjectsOfType<GridEnemy>().ToList();
-        player = FindObjectOfType<GridPlayer>();
+        enemyList = FindObjectsOfType<TileEnemy>().ToList();
+        player = FindObjectOfType<TilePlayer>();
 
         currentTurnIndex = 0;
         turnOrdering.Add(player);
@@ -35,7 +35,7 @@ public class CombatRoomController : MonoBehaviour
             gridTilesContent.Add((Vector3Int)coordinate, null);
         }
 
-        foreach (GridEnemy enemy in enemyList)
+        foreach (TileEnemy enemy in enemyList)
         {
             gridTilesContent[grid.WorldToCell(enemy.transform.position)] = enemy;
         }
@@ -61,8 +61,8 @@ public class CombatRoomController : MonoBehaviour
         foreach (Vector3Int key in gridTilesContent.Keys)
         {
             if (gridTilesContent[key] == null) { Gizmos.color = Color.blue; }
-            else if (gridTilesContent[key].ContentType == GridTileContentType.Player) { Gizmos.color = Color.green; }
-            else if (gridTilesContent[key].ContentType == GridTileContentType.Enemy) { Gizmos.color = Color.red; }
+            else if (gridTilesContent[key].ContentType == TileContentType.Player) { Gizmos.color = Color.green; }
+            else if (gridTilesContent[key].ContentType == TileContentType.Enemy) { Gizmos.color = Color.red; }
 
             Gizmos.DrawWireCube(key + new Vector3(.5f, .5f), new Vector3(.8f, .8f, 0));
         }

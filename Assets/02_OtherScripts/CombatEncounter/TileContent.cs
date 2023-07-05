@@ -3,19 +3,16 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum GridTileContentType
+public enum TileContentType
 {
     Empty = 0,
     Player = 1,
     Enemy = 2,
 }
 
-public abstract class GridTileContent : MonoBehaviour 
+public abstract class TileContent : MonoBehaviour 
 {
-    public GridTileContentType ContentType { get; protected set; }
-
-    [Header("Grid Settings")]
-    [SerializeField] protected int movementRange;
+    public TileContentType ContentType { get; protected set; }
 
     protected CombatRoomController combatRoomController;
     protected RangeOverlayGenerator rangeOverlayGenerator;
@@ -23,15 +20,13 @@ public abstract class GridTileContent : MonoBehaviour
 
     protected NavMeshAgent agent;
 
-    protected Dictionary<GridTileContentType, List<Vector3Int>> surroundingTiles = new();
-
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         grid = FindObjectOfType<Grid>();
         combatRoomController = FindObjectOfType<CombatRoomController>();
         rangeOverlayGenerator = FindObjectOfType<RangeOverlayGenerator>();
-        ContentType = GridTileContentType.Empty;
+        ContentType = TileContentType.Empty;
 
         agent.isStopped = true;
 
@@ -42,16 +37,16 @@ public abstract class GridTileContent : MonoBehaviour
 
     public abstract void OnTurnStart();
 
-    protected void CalculateSurroundingTiles(Vector3Int referencePosition)
+    protected Dictionary<TileContentType, List<Vector3Int>> CalculateSurroundingTiles(Vector3Int referencePosition, int range)
     {
         Queue<Node> nodeQueue = new();
         List<Vector3Int> validPositions = new();
 
-        surroundingTiles = new()
+        Dictionary<TileContentType, List<Vector3Int>> surroundingTiles = new()
         {
-            { GridTileContentType.Empty, new List<Vector3Int>() },
-            { GridTileContentType.Player, new List<Vector3Int>() },
-            { GridTileContentType.Enemy, new List<Vector3Int>() }
+            { TileContentType.Empty, new List<Vector3Int>() },
+            { TileContentType.Player, new List<Vector3Int>() },
+            { TileContentType.Enemy, new List<Vector3Int>() }
         };
 
         nodeQueue.Enqueue(new Node(0, 0, 0));
@@ -61,13 +56,13 @@ public abstract class GridTileContent : MonoBehaviour
         {
             Node currentNode = nodeQueue.Dequeue();
 
-            if (currentNode.cost >= movementRange) { continue; }
+            if (currentNode.cost >= range) { continue; }
 
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
                 {
-                    if (Mathf.Abs(x) == Mathf.Abs(y)) { continue; }
+                    if (Mathf.Abs(x) == Mathf.Abs(y)) { continue; } // Exclude Diagonals
 
                     Vector3Int coordinate = new Vector3Int(currentNode.x, currentNode.y) + new Vector3Int(x, y) + referencePosition;
                     if (validPositions.Contains(coordinate)) { continue; }
@@ -75,17 +70,17 @@ public abstract class GridTileContent : MonoBehaviour
                     if (!combatRoomController.gridTilesContent.ContainsKey(coordinate)) { continue; }
 
                     if (combatRoomController.gridTilesContent[coordinate] == null ||
-                        combatRoomController.gridTilesContent[coordinate].ContentType == GridTileContentType.Empty)
+                        combatRoomController.gridTilesContent[coordinate].ContentType == TileContentType.Empty)
                     {
-                        surroundingTiles[GridTileContentType.Empty].Add(coordinate);
+                        surroundingTiles[TileContentType.Empty].Add(coordinate);
                     }
-                    else if (combatRoomController.gridTilesContent[coordinate].ContentType == GridTileContentType.Player) 
+                    else if (combatRoomController.gridTilesContent[coordinate].ContentType == TileContentType.Player) 
                     {
-                        surroundingTiles[GridTileContentType.Player].Add(coordinate); 
+                        surroundingTiles[TileContentType.Player].Add(coordinate); 
                     }
-                    else if (combatRoomController.gridTilesContent[coordinate].ContentType == GridTileContentType.Enemy)
+                    else if (combatRoomController.gridTilesContent[coordinate].ContentType == TileContentType.Enemy)
                     {
-                        surroundingTiles[GridTileContentType.Enemy].Add(coordinate);
+                        surroundingTiles[TileContentType.Enemy].Add(coordinate);
                     }
 
                     validPositions.Add(coordinate);
@@ -95,6 +90,8 @@ public abstract class GridTileContent : MonoBehaviour
                 }
             }
         }
+
+        return surroundingTiles;
     }
 
     protected void TurnEnd()
