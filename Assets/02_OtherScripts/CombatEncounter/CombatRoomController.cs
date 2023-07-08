@@ -15,8 +15,13 @@ public class CombatRoomController : MonoBehaviour
     private List<TileEnemy> enemyList;
     private TilePlayer player;
 
-    private readonly List<TileContent> turnOrdering = new();
+    private readonly List<TileEntity> turnOrdering = new();
     private int currentTurnIndex;
+
+    public void RemoveTileEntity(TileEntity tile)
+    {
+        turnOrdering.Remove(tile);
+    }
 
     private void Awake()
     {
@@ -45,7 +50,7 @@ public class CombatRoomController : MonoBehaviour
 
     private void Start()
     {
-        turnOrdering[currentTurnIndex].OnTurnStart();
+        Invoke(nameof(StartNextTurn), .001f);
     }
 
     public void CurrentTurnEnd()
@@ -53,7 +58,12 @@ public class CombatRoomController : MonoBehaviour
         currentTurnIndex++;
         if (currentTurnIndex >= turnOrdering.Count) { currentTurnIndex = 0; }
 
-        turnOrdering[currentTurnIndex].OnTurnStart();
+        Invoke(nameof(StartNextTurn), .001f);
+    }
+
+    private void StartNextTurn()
+    {
+        turnOrdering[currentTurnIndex].TurnStart();
     }
 
     private void OnDrawGizmos()

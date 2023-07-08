@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2de284edaf1804f8a7a4f520f0e63e, type: 3}
   m_Name: TestEnemyWeapon
   m_EditorClassIdentifier: 
-  weaponName: TestEnemtWeapon
-  weaponDescription: asdfa
-  damage: 5
+  weaponName: TestEnemyWeapon
+  weaponDescription: TestEnemyWeapon
+  damage: 30
   force: 4
-  attackRange: 4
+  attackRange: 10
   attackSound: {fileID: 0}

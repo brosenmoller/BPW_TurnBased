@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class TilePlayer : TileEntity
 {
@@ -11,13 +12,16 @@ public class TilePlayer : TileEntity
 
     private Camera mainCamera;
     private Vector3 cursorTargetPosition;
+    private SpriteRenderer cursorSpriteRenderer;
 
     private GameUIView gameUIView;
 
     public override void OnAwake()
     {
+        base.OnAwake();
         mainCamera = Camera.main;
         ContentType = TileContentType.Player;
+        cursorSpriteRenderer = cursor.GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -25,9 +29,8 @@ public class TilePlayer : TileEntity
         gameUIView = (GameUIView)GameManager.UIViewManager.GetView(typeof(GameUIView));
     }
 
-    public override void OnTurnStart()
+    protected override void OnTurnStart()
     {
-        base.OnTurnStart();
         OnSwitchMode();
         cursor.gameObject.SetActive(true);
 
@@ -86,16 +89,40 @@ public class TilePlayer : TileEntity
 
     protected override void OnSwitchMode()
     {
+        cursor.gameObject.SetActive(true);
+
         if (currentMode == Mode.Moving)
-        {    
+        {
+            if (surroundingTilesMovementRange[TileContentType.Empty].Count <= 0)
+            {
+                movingModeAvailable = false;
+                SwitchMode(Mode.Attacking);
+                return;
+            }
+
+            cursorSpriteRenderer.color = Color.blue;
+            movementTargetPosition = surroundingTilesMovementRange[TileContentType.Empty][Random.Range(0, surroundingTilesMovementRange[TileContentType.Empty].Count - 1)];
+            cursorTargetPosition = (Vector3)movementTargetPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
+
             rangeOverlayGenerator.ClearRangeOverlay();
             gameUIView.HighligtMovementMode();
             GenerateMovementRangeOverlay();
         }
         else if (currentMode == Mode.Attacking)
         {
-            gameUIView.HighligtAttackMode();
+            if (surroundingTilesAttackRange[TileContentType.Enemy].Count <= 0)
+            {
+                if (!movingModeAvailable) { attackingModeAvailable = false; }
+                SwitchMode(Mode.Moving);
+                return;
+            }
+
+            cursorSpriteRenderer.color = Color.red;
+            attackTargetPosition = surroundingTilesAttackRange[TileContentType.Enemy][Random.Range(0, surroundingTilesAttackRange[TileContentType.Enemy].Count - 1)];
+            cursorTargetPosition = (Vector3)attackTargetPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
+
             rangeOverlayGenerator.ClearRangeOverlay();
+            gameUIView.HighligtAttackMode();
             GenerateAttackRangeOverlay();
         }
     }
@@ -109,7 +136,7 @@ public class TilePlayer : TileEntity
         Vector3Int mouseGridPosition = grid.WorldToCell(mousePosition);
 
         if (currentMode == Mode.Moving) { MovementCursor(mouseGridPosition); }
-        if (currentMode == Mode.Attacking) { AttackCursor(mouseGridPosition); }
+        else if (currentMode == Mode.Attacking) { AttackCursor(mouseGridPosition); }
     }
 
     private void MovementCursor(Vector3Int newGridPosition)
@@ -133,14 +160,18 @@ public class TilePlayer : TileEntity
         attackTargetPosition = newGridPosition;
     }
 
-
-
-    private void FixedUpdate()
+    protected override void OnFixedUpdate()
     {
         if (cursor.position != cursorTargetPosition)
         {
             cursor.position = Vector3.Lerp(cursor.position, cursorTargetPosition, Time.deltaTime * cursorDragSpeed);
         }
+    }
+
+    protected override void OnDeath()
+    {
+        OnTurnEnd();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
 

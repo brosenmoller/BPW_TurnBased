@@ -14,7 +14,7 @@ public abstract class TileEntity : TileContent, IDamageAble
         {
             _health = value;
 
-            if (_health <= 0) { Debug.Log("Death"); }
+            if (_health <= 0) { OnDeath(); }
         } 
         get { return _health; } 
     } 
@@ -36,7 +36,7 @@ public abstract class TileEntity : TileContent, IDamageAble
         Attacking
     }
 
-    public override void OnTurnStart()
+    public void TurnStart()
     {
         attackingModeAvailable = true;
         movingModeAvailable = true;
@@ -44,31 +44,53 @@ public abstract class TileEntity : TileContent, IDamageAble
         executingMode = false;
         movementTargetPosition = null;
         attackTargetPosition = null;
-        Health = maxHealth;
 
-        surroundingTilesMovementRange = CalculateSurroundingTiles(grid.WorldToCell(transform.position), movementRange);
-        surroundingTilesAttackRange = CalculateSurroundingTiles(grid.WorldToCell(transform.position), weapon.attackRange);
-        Debug.Log(surroundingTilesAttackRange[TileContentType.Enemy].Count);
+        CalculateMovementTiles();
+        CalculateAttackTiles();
+        OnTurnStart();
     }
 
-    protected virtual void OnTurnEnd() { }
+    public override void OnAwake()
+    {
+        Health = maxHealth;
+    }
 
-    private void FixedUpdate()
+    protected void CalculateMovementTiles()
+    {
+        surroundingTilesMovementRange = CalculateSurroundingTiles(grid.WorldToCell(transform.position), movementRange);
+    }
+
+    protected void CalculateAttackTiles()
+    {
+        surroundingTilesAttackRange = CalculateSurroundingTiles(grid.WorldToCell(transform.position), weapon.attackRange, true);
+    }
+
+    protected virtual void FixedUpdate()
     {
         if (executingMode)
         {
-            if (!agent.isStopped && agent.remainingDistance <= agent.stoppingDistance)
+            if (currentMode == Mode.Moving && !agent.isStopped && agent.remainingDistance <= agent.stoppingDistance)
             {
                 EndExecution();
             }
         }
+        OnFixedUpdate();
     }
+
+    protected virtual void OnTurnStart() { }
+    protected virtual void OnTurnEnd() { }
+    protected virtual void OnFixedUpdate() { }
+    protected virtual void OnDeath() { }
 
     public void SwitchMode(Mode mode)
     {
-        Debug.Log("Switching Mode To: " + mode);
         if (mode == Mode.Moving && movingModeAvailable) { currentMode = mode; OnSwitchMode(); }
-        if (mode == Mode.Attacking && attackingModeAvailable) { currentMode = mode; OnSwitchMode(); }
+        else if (mode == Mode.Attacking && attackingModeAvailable) { currentMode = mode; OnSwitchMode(); }
+        else if (!movingModeAvailable && !attackingModeAvailable)
+        {
+            OnTurnEnd();
+            TurnEnd();
+        }
     }
 
     protected virtual void OnSwitchMode() { }
@@ -91,15 +113,12 @@ public abstract class TileEntity : TileContent, IDamageAble
 
     private void ExcuteMovingMode()
     {
-        Debug.Log("Executing Movemnt");
-        agent.SetDestination((Vector3)movementTargetPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0));
+        agent.SetDestination((Vector3)movementTargetPosition + new Vector3(.5f, .5f, 0));
         agent.isStopped = false;
     }
 
     private void ExecuteAttackMode()
     {
-        Debug.Log("Executing Attack");
-
         IDamageAble damageAble = (IDamageAble)combatRoomController.gridTilesContent[(Vector3Int)attackTargetPosition];
         damageAble.ApplyDamge(weapon.damage);
         EndExecution();
@@ -108,14 +127,29 @@ public abstract class TileEntity : TileContent, IDamageAble
     public void EndExecution()
     {
         executingMode = false;
-        if (attackingModeAvailable) { SwitchMode(Mode.Attacking); }
-        else if (movingModeAvailable) { SwitchMode(Mode.Moving); }
-        else { OnTurnEnd(); TurnEnd(); }
+        agent.isStopped = true;
+        UpdateCombatRoom();
+        if (attackingModeAvailable) 
+        { 
+            CalculateAttackTiles();
+            SwitchMode(Mode.Attacking);
+        }
+        else if (movingModeAvailable) 
+        {
+            CalculateMovementTiles();
+            SwitchMode(Mode.Moving); 
+        }
+        else
+        {
+            OnTurnEnd();
+            TurnEnd();
+        }
     }
 
     public void ApplyDamge(int damage)
     {
         Health -= damage;
+        Debug.Log(gameObject.name + ": " + Health);
     }
 }
 

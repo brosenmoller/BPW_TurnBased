@@ -5,14 +5,15 @@ public class RangeOverlayGenerator : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Tilemap rangeOverlayTilemap;
-    [SerializeField] private TileBase movementRangeOverlayRuleTile;
+    [SerializeField] private TileBase movementRangeOverlayTile;
     [SerializeField] private TileBase enemyHighlightOverlayTile;
+    [SerializeField] private TileBase attackRangeOverlayTile;
 
     public void GenerateMovementRangeOverlay(Vector3Int[] WalkableTiles, Vector3Int[] enemyTiles)
     {
         foreach (Vector3Int coordinate in WalkableTiles)
         {
-            rangeOverlayTilemap.SetTile(coordinate, movementRangeOverlayRuleTile);
+            rangeOverlayTilemap.SetTile(coordinate, movementRangeOverlayTile);
         }
 
         foreach (Vector3Int coordinate in enemyTiles)
@@ -25,7 +26,7 @@ public class RangeOverlayGenerator : MonoBehaviour
     {
         foreach (Vector3Int coordinate in attackRangeTiles)
         {
-            rangeOverlayTilemap.SetTile(coordinate, enemyHighlightOverlayTile);
+            rangeOverlayTilemap.SetTile(coordinate, attackRangeOverlayTile);
         }
     }
 

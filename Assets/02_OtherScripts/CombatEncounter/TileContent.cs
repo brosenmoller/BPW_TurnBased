@@ -17,7 +17,6 @@ public abstract class TileContent : MonoBehaviour
     protected CombatRoomController combatRoomController;
     protected RangeOverlayGenerator rangeOverlayGenerator;
     protected Grid grid;
-
     protected NavMeshAgent agent;
 
     private void Awake()
@@ -35,9 +34,7 @@ public abstract class TileContent : MonoBehaviour
 
     public abstract void OnAwake();
 
-    public abstract void OnTurnStart();
-
-    protected Dictionary<TileContentType, List<Vector3Int>> CalculateSurroundingTiles(Vector3Int referencePosition, int range)
+    protected Dictionary<TileContentType, List<Vector3Int>> CalculateSurroundingTiles(Vector3Int referencePosition, int range, bool sightLineRequired = false)
     {
         Queue<Node> nodeQueue = new();
         List<Vector3Int> validPositions = new();
@@ -69,6 +66,16 @@ public abstract class TileContent : MonoBehaviour
 
                     if (!combatRoomController.gridTilesContent.ContainsKey(coordinate)) { continue; }
 
+                    if (sightLineRequired)
+                    {
+                        Vector3 origin = transform.position;
+                        Vector3 target = coordinate;
+
+                        RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, target - origin, Vector2.Distance(target, origin));
+                        
+                        if (raycastHit2D.collider != null) { continue; }
+                    }
+
                     if (combatRoomController.gridTilesContent[coordinate] == null ||
                         combatRoomController.gridTilesContent[coordinate].ContentType == TileContentType.Empty)
                     {
@@ -94,12 +101,16 @@ public abstract class TileContent : MonoBehaviour
         return surroundingTiles;
     }
 
-    protected void TurnEnd()
+    protected void UpdateCombatRoom()
     {
-        agent.isStopped = true;
         Vector3Int key = combatRoomController.gridTilesContent.FirstOrDefault(keyValuePair => keyValuePair.Value == this).Key;
         combatRoomController.gridTilesContent[key] = null;
-        combatRoomController.gridTilesContent[grid.WorldToCell(transform.position)] = this;
+        combatRoomController.gridTilesContent[grid.WorldToCell(transform.position + new Vector3(.2f, .2f, 0))] = this;
+    }
+
+    protected void TurnEnd()
+    {
+        UpdateCombatRoom();
         combatRoomController.CurrentTurnEnd();
     }
 
