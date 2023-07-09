@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da2de284edaf1804f8a7a4f520f0e63e, type: 3}
-  m_Name: TestEnemyWeapon
+  m_Name: Pistol
   m_EditorClassIdentifier: 
-  weaponName: TestEnemyWeapon
-  weaponDescription: TestEnemyWeapon
+  weaponName: Pistol
+  weaponDescription: Pistol
   damage: 30
-  force: 4
-  attackRange: 10
+  force: 5
+  attackRange: 15
   attackSound: {fileID: 0}
+  bulletPrefab: {fileID: 1653609115445974093, guid: 69a916cb858d68a4aa82cd96f0d858ea, type: 3}
+  bulletSpeed: 10

@@ -44,8 +44,6 @@ public class TileEnemy : TileEntity
                 return;
             }
 
-            Debug.Log("Enemy Attack");
-
             attackTargetPosition = surroundingTilesAttackRange[TileContentType.Player][Random.Range(0, surroundingTilesAttackRange[TileContentType.Player].Count - 1)];
             ExecuteMode();
         }

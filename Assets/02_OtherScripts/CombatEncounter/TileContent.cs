@@ -69,10 +69,9 @@ public abstract class TileContent : MonoBehaviour
                     if (sightLineRequired)
                     {
                         Vector3 origin = transform.position;
-                        Vector3 target = coordinate;
+                        Vector3 target = coordinate + new Vector3(.5f, .5f, 0);
 
                         RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, target - origin, Vector2.Distance(target, origin));
-                        
                         if (raycastHit2D.collider != null) { continue; }
                     }
 

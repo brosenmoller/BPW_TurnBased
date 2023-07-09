@@ -136,7 +136,7 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 0
-  m_Height: 0.9
+  m_Height: 0.25
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
@@ -153,8 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementRange: 4
-  weapon: {fileID: 0}
-  maxHealth: 0
+  weapon: {fileID: 11400000, guid: ab5e2d79f617ddb4e838c676e925c3cd, type: 2}
+  maxHealth: 100
+  whiteFlashMaterial: {fileID: 2100000, guid: 020d8e5e5b968184e9aa42347ea2802f, type: 2}
+  spriteRenderer: {fileID: 8351770880218253449}
   cursorDragSpeed: 10
   cursor: {fileID: 0}
   cursorSprite: {fileID: 0}

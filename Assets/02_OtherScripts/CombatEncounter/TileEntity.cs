@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class TileEntity : TileContent, IDamageAble
 {
@@ -7,6 +8,9 @@ public abstract class TileEntity : TileContent, IDamageAble
     [SerializeField] protected int movementRange;
     [SerializeField] protected Weapon weapon;
     [SerializeField] protected int maxHealth;
+    [SerializeField] protected Material whiteFlashMaterial;
+    [SerializeField] protected SpriteRenderer spriteRenderer;
+    [SerializeField] protected Slider healthBar;
 
     private int _health;
     protected int Health { 
@@ -30,6 +34,8 @@ public abstract class TileEntity : TileContent, IDamageAble
     protected Vector3Int? movementTargetPosition;
     protected Vector3Int? attackTargetPosition;
 
+    private Material normalMaterial;
+
     public enum Mode
     {
         Moving,
@@ -52,6 +58,7 @@ public abstract class TileEntity : TileContent, IDamageAble
 
     public override void OnAwake()
     {
+        normalMaterial = spriteRenderer.material;
         Health = maxHealth;
     }
 
@@ -120,8 +127,7 @@ public abstract class TileEntity : TileContent, IDamageAble
     private void ExecuteAttackMode()
     {
         IDamageAble damageAble = (IDamageAble)combatRoomController.gridTilesContent[(Vector3Int)attackTargetPosition];
-        damageAble.ApplyDamge(weapon.damage);
-        EndExecution();
+        weapon.StartUseWeapon(transform.position, (Vector3)attackTargetPosition + new Vector3(.5f, .5f, 0), damageAble, EndExecution);
     }
 
     public void EndExecution()
@@ -149,7 +155,19 @@ public abstract class TileEntity : TileContent, IDamageAble
     public void ApplyDamge(int damage)
     {
         Health -= damage;
-        Debug.Log(gameObject.name + ": " + Health);
+        healthBar.value = Mathf.InverseLerp(0, maxHealth, Health);
+    }
+
+    public void GetHitEffects()
+    {
+        spriteRenderer.material = whiteFlashMaterial;
+
+        Invoke(nameof(EndEffects), .2f);
+    }
+
+    private void EndEffects()
+    {
+        spriteRenderer.material = normalMaterial;
     }
 }
 

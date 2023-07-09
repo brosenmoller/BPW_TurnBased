@@ -168,6 +168,12 @@ public class TilePlayer : TileEntity
         }
     }
 
+    private void OnDestroy()
+    {
+        GameManager.InputManager.controls.Default.MouseAiming.performed -= MoveCursor;
+        GameManager.InputManager.controls.Default.SelectLocation.performed -= Select;
+    }
+
     protected override void OnDeath()
     {
         OnTurnEnd();
