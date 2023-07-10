@@ -110,7 +110,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6482489094538115601}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 27.5, y: 12.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -157,6 +157,6 @@ MonoBehaviour:
   maxHealth: 100
   whiteFlashMaterial: {fileID: 2100000, guid: 020d8e5e5b968184e9aa42347ea2802f, type: 2}
   spriteRenderer: {fileID: 8351770880218253449}
+  healthBar: {fileID: 0}
   cursorDragSpeed: 10
   cursor: {fileID: 0}
-  cursorSprite: {fileID: 0}

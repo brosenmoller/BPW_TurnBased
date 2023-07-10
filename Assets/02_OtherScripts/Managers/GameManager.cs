@@ -67,6 +67,12 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    public void ReloadCurrentScene()
+    {
+        StopAllCoroutines();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
     private void OnSceneLoaded(Scene loadedScene, LoadSceneMode loadSceneMode)
     {
         foreach (Manager manager in activeManagers)

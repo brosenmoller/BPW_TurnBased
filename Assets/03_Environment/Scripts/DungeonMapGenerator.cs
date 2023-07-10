@@ -33,6 +33,12 @@ public class DungeonMapGenerator : MonoBehaviour
     private int[] map;
     private int minRoomSize;
 
+    public void GenerateMap(int seed)
+    {
+        this.seed = seed;
+        GenerateMap();
+    }
+
     public void GenerateMap()
     {
         map = new int[mapSize * mapSize];
@@ -156,6 +162,7 @@ public class DungeonMapGenerator : MonoBehaviour
                 if (adjecentEmptyTileCounter == 9)
                 {
                     playerPrefab.transform.position = new Vector3(x + .5f, y + .5f, 0);
+                    playerPrefab.SetActive(true);
                 }
             }
         }

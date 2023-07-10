@@ -13,7 +13,7 @@ public class CombatRoomController : MonoBehaviour
     public Dictionary<Vector3Int, TileContent> gridTilesContent = new();
     
     private List<TileEnemy> enemyList;
-    private TilePlayer player;
+    private List<TilePlayer> playerList;
 
     private readonly List<TileEntity> turnOrdering = new();
     private int currentTurnIndex;
@@ -23,15 +23,17 @@ public class CombatRoomController : MonoBehaviour
         turnOrdering.Remove(tile);
     }
 
-    private void Awake()
+    public void Setup()
     {
         grid = FindAnyObjectByType<Grid>();
         enemyList = FindObjectsOfType<TileEnemy>().ToList();
-        player = FindObjectOfType<TilePlayer>();
+        playerList = FindObjectsOfType<TilePlayer>().ToList();
 
         currentTurnIndex = 0;
-        turnOrdering.Add(player);
+        turnOrdering.AddRange(playerList);
         turnOrdering.AddRange(enemyList);
+
+        //startCoordinate = new Vector2Int((int)playerList[0].transform.position.x, (int)playerList[0].transform.position.y);
 
         DetectRoom(startCoordinate); // Temporary Room Detection
 
@@ -45,7 +47,16 @@ public class CombatRoomController : MonoBehaviour
             gridTilesContent[grid.WorldToCell(enemy.transform.position)] = enemy;
         }
 
-        gridTilesContent[grid.WorldToCell(player.transform.position)] = player;
+        foreach (TilePlayer player in playerList)
+        {
+            gridTilesContent[grid.WorldToCell(player.transform.position)] = player;
+        }
+
+    }
+
+    private void Awake()
+    {
+        Setup();
     }
 
     private void Start()

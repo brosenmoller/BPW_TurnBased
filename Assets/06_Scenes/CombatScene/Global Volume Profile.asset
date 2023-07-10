@@ -15,7 +15,7 @@ MonoBehaviour:
   active: 1
   temperature:
     m_OverrideState: 1
-    m_Value: 20.4
+    m_Value: 18.7
   tint:
     m_OverrideState: 0
     m_Value: 27.5
@@ -55,10 +55,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.405
+    m_Value: 0.37
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.268
+    m_Value: 0.416
   rounded:
     m_OverrideState: 0
     m_Value: 0

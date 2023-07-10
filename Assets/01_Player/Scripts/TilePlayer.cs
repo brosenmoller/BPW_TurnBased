@@ -1,14 +1,12 @@
 ﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class TilePlayer : TileEntity
 {
     [Header("Player Settings")]
     [SerializeField] protected float cursorDragSpeed;
     [SerializeField] protected Transform cursor;
-    [SerializeField] protected SpriteRenderer cursorSprite;
 
     private Camera mainCamera;
     private Vector3 cursorTargetPosition;
@@ -148,8 +146,8 @@ public class TilePlayer : TileEntity
 
         TileContent currentTarget = combatRoomController.gridTilesContent[newGridPosition];
 
-        if (currentTarget == null || currentTarget.ContentType == TileContentType.Empty) { cursorSprite.color = Color.blue; }
-        else if (currentTarget.ContentType == TileContentType.Enemy) { cursorSprite.color = Color.red; }
+        if (currentTarget == null || currentTarget.ContentType == TileContentType.Empty) { cursorSpriteRenderer.color = Color.blue; }
+        else if (currentTarget.ContentType == TileContentType.Enemy) { cursorSpriteRenderer.color = Color.red; }
     }
     
     private void AttackCursor(Vector3Int newGridPosition)
@@ -177,7 +175,7 @@ public class TilePlayer : TileEntity
     protected override void OnDeath()
     {
         OnTurnEnd();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.Instance.ReloadCurrentScene();
     }
 }
 

@@ -27,8 +27,6 @@ public abstract class TileContent : MonoBehaviour
         rangeOverlayGenerator = FindObjectOfType<RangeOverlayGenerator>();
         ContentType = TileContentType.Empty;
 
-        agent.isStopped = true;
-
         OnAwake();
     }
 
