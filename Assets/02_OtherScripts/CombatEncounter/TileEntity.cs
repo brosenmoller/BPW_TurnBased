@@ -50,6 +50,7 @@ public abstract class TileEntity : TileContent, IDamageAble
         executingMode = false;
         movementTargetPosition = null;
         attackTargetPosition = null;
+        agent.enabled = true;
 
         CalculateMovementTiles();
         CalculateAttackTiles();

@@ -5,8 +5,13 @@ using System.Linq;
 
 public class CombatRoomController : MonoBehaviour
 {
-    [SerializeField] private Vector2Int startCoordinate;
+    [Header("Tilemap")]
     [SerializeField] private Tilemap groundTilemap;
+
+    [Header("Enemies")]
+    [SerializeField] private Transform enemyParent;
+    [SerializeField] private GameObject enemy1Prefab;
+    [SerializeField] private GameObject enemy2Prefab;
     
     private Grid grid;
 
@@ -17,6 +22,7 @@ public class CombatRoomController : MonoBehaviour
 
     private readonly List<TileEntity> turnOrdering = new();
     private int currentTurnIndex;
+    private Vector2Int startCoordinate = new(0, 0);
 
     public void RemoveTileEntity(TileEntity tile)
     {
@@ -31,20 +37,16 @@ public class CombatRoomController : MonoBehaviour
 
         currentTurnIndex = 0;
         turnOrdering.AddRange(playerList);
-        turnOrdering.AddRange(enemyList);
 
-        //startCoordinate = new Vector2Int((int)playerList[0].transform.position.x, (int)playerList[0].transform.position.y);
+        startCoordinate = (Vector2Int)grid.WorldToCell(playerList[0].transform.position);
 
         DetectRoom(startCoordinate); // Temporary Room Detection
 
         foreach (Vector2Int coordinate in memberCoordinates)
         {
+            if (gridTilesContent.Keys.Contains((Vector3Int)coordinate)) { continue; }
+            
             gridTilesContent.Add((Vector3Int)coordinate, null);
-        }
-
-        foreach (TileEnemy enemy in enemyList)
-        {
-            gridTilesContent[grid.WorldToCell(enemy.transform.position)] = enemy;
         }
 
         foreach (TilePlayer player in playerList)
@@ -52,16 +54,25 @@ public class CombatRoomController : MonoBehaviour
             gridTilesContent[grid.WorldToCell(player.transform.position)] = player;
         }
 
-    }
+        int enemyCount = Random.Range(2, 5);
+        for (int i = 0; i < enemyCount; i++)
+        {
+            Vector3Int randomPosition;
+            do
+            {
+                randomPosition = gridTilesContent.ElementAt(Random.Range(0, gridTilesContent.Count)).Key;
+            }
+            while (gridTilesContent[randomPosition] != null);
 
-    private void Awake()
-    {
-        Setup();
-    }
+            int randomEnemy = Random.Range(0, 2);
+            GameObject enemyPrefab = randomEnemy == 1 ? enemy1Prefab : enemy2Prefab;
+            GameObject newEnemy = Instantiate(enemyPrefab, randomPosition, Quaternion.Euler(-90, 0, 0), enemyParent);
+            enemyList.Add(newEnemy.GetComponent<TileEnemy>());
+        }
 
-    private void Start()
-    {
-        Invoke(nameof(StartNextTurn), .001f);
+        turnOrdering.AddRange(enemyList);
+
+        Invoke(nameof(StartNextTurn), .1f);
     }
 
     public void CurrentTurnEnd()

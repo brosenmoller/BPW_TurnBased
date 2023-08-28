@@ -5,7 +5,9 @@ public class DungeonMapGenerator : MonoBehaviour
     [Header("General")]
     public bool autoUpdate;
     [SerializeField] private int mapSize;
+    [SerializeField] private int borderSize;
     [SerializeField] private int seed;
+    private int borderedMapSize;
 
     [Header("Cellular Automata")]
     [SerializeField, Range(0, 100)] private int randomFillPercent;
@@ -41,6 +43,7 @@ public class DungeonMapGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
+        borderedMapSize = mapSize + borderSize * 2;
         map = new int[mapSize * mapSize];
 
         RandomFillMap();
@@ -50,20 +53,19 @@ public class DungeonMapGenerator : MonoBehaviour
         map = GridRoomDetection.CleanUpRoomsInGrid(map, minRoomSize, mapSize, maxCorridorSize);
 
         ComputeMap(true);
-        //map = AddBorderToMap();
+
+        map = AddBorderToMap();
 
         PlacePlayer();
 
         if (generateTilemap)
         {
-            tilemapGenerator.GenerateTilemap(map, mapSize);
+            tilemapGenerator.GenerateTilemap(map, borderedMapSize);
         }
     }
 
     private int[] AddBorderToMap()
     {
-        int borderSize = 1;
-        int borderedMapSize = mapSize + borderSize * 2;
         int[] borderedMap = new int[borderedMapSize * borderedMapSize];
 
         for (int x = 0; x < borderedMapSize; x++)
@@ -139,9 +141,9 @@ public class DungeonMapGenerator : MonoBehaviour
 
     private void PlacePlayer()
     {
-        for (int x = 0; x < mapSize; x++)
+        for (int x = 0; x < borderedMapSize; x++)
         {
-            for (int y = 0; y < mapSize; y++)
+            for (int y = 0; y < borderedMapSize; y++)
             {
                 int adjecentEmptyTileCounter = 0;
 
@@ -149,7 +151,7 @@ public class DungeonMapGenerator : MonoBehaviour
                 {
                     for (int gridY = y - 1; gridY <= y + 1; gridY++)
                     {
-                        int mapIndex = gridX + gridY * mapSize;
+                        int mapIndex = gridX + gridY * borderedMapSize;
                         if (mapIndex >= map.Length || mapIndex < 0) { continue; }
 
                         if (map[mapIndex] == 0)

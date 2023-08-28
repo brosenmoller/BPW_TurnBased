@@ -13,6 +13,10 @@ public class DungeonManager : MonoBehaviour
         generator.GenerateMap(Random.Range(0, 1000));
         navMeshSurface.RemoveData();
         navMeshSurface.BuildNavMesh();
+    }
+
+    private void Start()
+    {
         combatRoomController.Setup();
     }
 }

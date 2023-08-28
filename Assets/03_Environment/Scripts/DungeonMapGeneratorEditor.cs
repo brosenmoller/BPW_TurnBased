@@ -7,19 +7,19 @@ public class DungeonMapGeneratorEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        DungeonMapGenerator cc = (DungeonMapGenerator)target;
+        DungeonMapGenerator dungeonMapGenerator = (DungeonMapGenerator)target;
 
         if (DrawDefaultInspector())
         {
-            if (cc.autoUpdate)
+            if (dungeonMapGenerator.autoUpdate)
             {
-                cc.GenerateMap();
+                dungeonMapGenerator.GenerateMap();
             }
         }
 
         if (GUILayout.Button("Generate"))
         {
-            cc.GenerateMap();
+            dungeonMapGenerator.GenerateMap();
         }
     }
 }
