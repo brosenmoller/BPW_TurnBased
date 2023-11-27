@@ -9,12 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da2de284edaf1804f8a7a4f520f0e63e, type: 3}
+  m_Script: {fileID: 11500000, guid: d888945803e698e41aeeadd23bae9ab4, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: 
   weaponName: Pistol
   weaponDescription: Pistol
-  damage: 30
+  icon: {fileID: 33704947, guid: 01d5c8f42aaf8b24a808d8a58a79a138, type: 3}
+  damage: 50
   force: 5
   attackRange: 15
   attackSound: {fileID: 0}

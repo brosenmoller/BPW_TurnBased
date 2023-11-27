@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public abstract class TileEntity : TileContent, IDamageAble
 {
     [Header("Entity Settings")]
     [SerializeField] protected int movementRange;
-    [SerializeField] protected Weapon weapon;
     [SerializeField] protected int maxHealth;
     [SerializeField] protected Material whiteFlashMaterial;
     [SerializeField] protected SpriteRenderer spriteRenderer;
     [SerializeField] protected Slider healthBar;
+    public Weapon selectedWeapon;
 
     private int _health;
     protected int Health { 
@@ -35,11 +36,22 @@ public abstract class TileEntity : TileContent, IDamageAble
     protected Vector3Int? attackTargetPosition;
 
     private Material normalMaterial;
+    protected NavMeshAgent agent;
+    protected RangeOverlayGenerator rangeOverlayGenerator;
 
     public enum Mode
     {
         Moving,
         Attacking
+    }
+
+    public override void OnAwake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        rangeOverlayGenerator = FindObjectOfType<RangeOverlayGenerator>();
+
+        normalMaterial = spriteRenderer.material;
+        Health = maxHealth;
     }
 
     public void TurnStart()
@@ -57,10 +69,10 @@ public abstract class TileEntity : TileContent, IDamageAble
         OnTurnStart();
     }
 
-    public override void OnAwake()
+    protected void TurnEnd()
     {
-        normalMaterial = spriteRenderer.material;
-        Health = maxHealth;
+        UpdateCombatRoom();
+        combatRoomController.CurrentTurnEnd();
     }
 
     protected void CalculateMovementTiles()
@@ -70,7 +82,7 @@ public abstract class TileEntity : TileContent, IDamageAble
 
     protected void CalculateAttackTiles()
     {
-        surroundingTilesAttackRange = CalculateSurroundingTiles(grid.WorldToCell(transform.position), weapon.attackRange, true);
+        surroundingTilesAttackRange = CalculateSurroundingTiles(grid.WorldToCell(transform.position), selectedWeapon.attackRange, true);
     }
 
     protected virtual void FixedUpdate()
@@ -128,7 +140,7 @@ public abstract class TileEntity : TileContent, IDamageAble
     private void ExecuteAttackMode()
     {
         IDamageAble damageAble = (IDamageAble)combatRoomController.gridTilesContent[(Vector3Int)attackTargetPosition];
-        weapon.StartUseWeapon(transform.position, (Vector3)attackTargetPosition + new Vector3(.5f, .5f, 0), damageAble, EndExecution);
+        selectedWeapon.StartUseWeapon(transform.position, (Vector3)attackTargetPosition + new Vector3(.5f, .5f, 0), damageAble, EndExecution);
     }
 
     public void EndExecution()

@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementRange: 4
-  weapon: {fileID: 11400000, guid: fd7937111309eae4d8edccdbe9cad3be, type: 2}
+  selectedWeapon: {fileID: 11400000, guid: db2050607124cfa45b48bd4a9156a574, type: 2}
   maxHealth: 100
   whiteFlashMaterial: {fileID: 2100000, guid: 020d8e5e5b968184e9aa42347ea2802f, type: 2}
   spriteRenderer: {fileID: 7959525791276633785}

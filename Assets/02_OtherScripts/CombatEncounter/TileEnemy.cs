@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class TileEnemy : TileEntity
 {
@@ -51,10 +50,7 @@ public class TileEnemy : TileEntity
 
     protected override void OnDeath()
     {
-        Vector3Int key = combatRoomController.gridTilesContent.FirstOrDefault(keyValuePair => keyValuePair.Value == this).Key;
-        combatRoomController.gridTilesContent[key] = null;
-        combatRoomController.RemoveTileEntity(this);
-        Destroy(gameObject);
+        combatRoomController.RemoveEnemy(this);
     }
 }
 

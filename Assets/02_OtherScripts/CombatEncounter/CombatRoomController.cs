@@ -12,10 +12,15 @@ public class CombatRoomController : MonoBehaviour
     [SerializeField] private Transform enemyParent;
     [SerializeField] private GameObject enemy1Prefab;
     [SerializeField] private GameObject enemy2Prefab;
+
+    [Header("Weapons")]
+    [SerializeField] private GameObject weaponPickupPrefab;
+    [SerializeField] private Weapon[] possibleWeapons;
     
     private Grid grid;
+    private DungeonManager dungeonManager;
 
-    public Dictionary<Vector3Int, TileContent> gridTilesContent = new();
+    public Dictionary<Vector3Int, TileContent> gridTilesContent;
     
     private List<TileEnemy> enemyList;
     private List<TilePlayer> playerList;
@@ -24,23 +29,40 @@ public class CombatRoomController : MonoBehaviour
     private int currentTurnIndex;
     private Vector2Int startCoordinate = new(0, 0);
 
+    public void RemoveTileContent(TileContent tile)
+    {
+        Vector3Int key = gridTilesContent.FirstOrDefault(keyValuePair => keyValuePair.Value == tile).Key;
+        gridTilesContent[key] = null;
+        Destroy(tile.gameObject);
+    }
+
     public void RemoveTileEntity(TileEntity tile)
     {
         turnOrdering.Remove(tile);
+        RemoveTileContent(tile);
     }
 
-    public void Setup()
+    public void RemoveEnemy(TileEnemy tile)
     {
+        if (enemyList.Contains(tile)) { enemyList.Remove(tile);}
+        RemoveTileEntity(tile);
+    }
+
+    public void Setup(DungeonManager dungeonManager)
+    {
+        this.dungeonManager = dungeonManager;
         grid = FindAnyObjectByType<Grid>();
-        enemyList = FindObjectsOfType<TileEnemy>().ToList();
+        enemyList = new List<TileEnemy>();
         playerList = FindObjectsOfType<TilePlayer>().ToList();
+        turnOrdering.Clear();
 
         currentTurnIndex = 0;
         turnOrdering.AddRange(playerList);
 
         startCoordinate = (Vector2Int)grid.WorldToCell(playerList[0].transform.position);
 
-        DetectRoom(startCoordinate); // Temporary Room Detection
+        gridTilesContent = new Dictionary<Vector3Int, TileContent>();
+        DetectRoom(startCoordinate); 
 
         foreach (Vector2Int coordinate in memberCoordinates)
         {
@@ -54,21 +76,7 @@ public class CombatRoomController : MonoBehaviour
             gridTilesContent[grid.WorldToCell(player.transform.position)] = player;
         }
 
-        int enemyCount = Random.Range(2, 5);
-        for (int i = 0; i < enemyCount; i++)
-        {
-            Vector3Int randomPosition;
-            do
-            {
-                randomPosition = gridTilesContent.ElementAt(Random.Range(0, gridTilesContent.Count)).Key;
-            }
-            while (gridTilesContent[randomPosition] != null);
-
-            int randomEnemy = Random.Range(0, 2);
-            GameObject enemyPrefab = randomEnemy == 1 ? enemy1Prefab : enemy2Prefab;
-            GameObject newEnemy = Instantiate(enemyPrefab, randomPosition, Quaternion.Euler(-90, 0, 0), enemyParent);
-            enemyList.Add(newEnemy.GetComponent<TileEnemy>());
-        }
+        SpawnEnemies();
 
         turnOrdering.AddRange(enemyList);
 
@@ -80,7 +88,14 @@ public class CombatRoomController : MonoBehaviour
         currentTurnIndex++;
         if (currentTurnIndex >= turnOrdering.Count) { currentTurnIndex = 0; }
 
-        Invoke(nameof(StartNextTurn), .001f);
+        if (enemyList.Count <= 0)
+        {
+            dungeonManager.FinishStage();
+        }
+        else
+        {
+            Invoke(nameof(StartNextTurn), .001f);
+        }
     }
 
     private void StartNextTurn()
@@ -88,8 +103,53 @@ public class CombatRoomController : MonoBehaviour
         turnOrdering[currentTurnIndex].TurnStart();
     }
 
+    private void SpawnEnemies()
+    {
+        int enemyCount = Random.Range(1, 2);
+        for (int i = 0; i < enemyCount; i++)
+        {
+            Vector3Int randomPosition;
+            do
+            {
+                randomPosition = gridTilesContent.ElementAt(Random.Range(0, gridTilesContent.Count)).Key;
+            }
+            while (gridTilesContent[randomPosition] != null);
+
+            int randomEnemy = Random.Range(0, 2);
+            GameObject enemyPrefab = randomEnemy == 1 ? enemy1Prefab : enemy2Prefab;
+            GameObject newEnemy = Instantiate(enemyPrefab, randomPosition + new Vector3(.5f, .5f), Quaternion.Euler(-90, 0, 0), enemyParent);
+            TileEnemy enemyTile = newEnemy.GetComponent<TileEnemy>();
+            enemyList.Add(enemyTile);
+            gridTilesContent[randomPosition] = enemyTile;
+        }
+    }
+
+    private void SpawnWeaponPickups()
+    {
+        int weaonCount = Random.Range(0, 2);
+        for (int i = 0; i < weaonCount; i++)
+        {
+            Vector3Int randomPosition;
+            do
+            {
+                randomPosition = gridTilesContent.ElementAt(Random.Range(0, gridTilesContent.Count)).Key;
+            }
+            while (gridTilesContent[randomPosition] != null);
+
+            GameObject newWeapon = Instantiate(weaponPickupPrefab, randomPosition + new Vector3(.5f, .5f), Quaternion.Euler(-90, 0, 0));
+            TileWeaponPickup weaponTile = newWeapon.GetComponent<TileWeaponPickup>();
+            
+            Weapon randomWeapon = possibleWeapons[Random.Range(0, possibleWeapons.Length)];
+            weaponTile.SetWeapon(randomWeapon);
+
+            gridTilesContent[randomPosition] = weaponTile;
+        }
+    }
+
     private void OnDrawGizmos()
     {
+        if (gridTilesContent == null) { return; }
+
         foreach (Vector3Int key in gridTilesContent.Keys)
         {
             if (gridTilesContent[key] == null) { Gizmos.color = Color.blue; }
@@ -100,12 +160,14 @@ public class CombatRoomController : MonoBehaviour
         }
     }
 
-
-    #region Temporary Room detection
-    public readonly HashSet<Vector2Int> memberCoordinates = new();
-    private readonly Queue<Vector2Int> coordinatesToCheck = new();
+    #region Room detection
+    public HashSet<Vector2Int> memberCoordinates;
+    private Queue<Vector2Int> coordinatesToCheck;
     private void DetectRoom(Vector2Int startCoordinate)
     {
+        memberCoordinates = new HashSet<Vector2Int>();
+        coordinatesToCheck = new Queue<Vector2Int>();
+
         coordinatesToCheck.Enqueue(startCoordinate);
         memberCoordinates.Add(startCoordinate);
 

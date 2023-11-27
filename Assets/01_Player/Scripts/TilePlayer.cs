@@ -178,4 +178,3 @@ public class TilePlayer : TileEntity
         GameManager.Instance.ReloadCurrentScene();
     }
 }
-

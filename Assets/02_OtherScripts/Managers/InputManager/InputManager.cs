@@ -1,7 +1,4 @@
-﻿
-using UnityEngine;
-
-public class InputManager : Manager
+﻿public class InputManager : Manager
 {
     public Controls controls;
     

@@ -256,13 +256,6 @@ public static class GridRoomDetection
                 map[(edgeRoomB.x + maxCorridorSize) + y * mapSize] = 0;
                 map[(edgeRoomB.x - maxCorridorSize) + y * mapSize] = 0;
             }
-
-            //Debug.DrawLine(
-            //    CoordinateToWorldPosition(edgeRoomA),
-            //    CoordinateToWorldPosition(edgeRoomB),
-            //    Color.yellow,
-            //    10
-            //);
         }
         public bool IsConnected(Room otherRoom) => connectedRooms.Contains(otherRoom);
     }

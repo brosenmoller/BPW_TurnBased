@@ -8,16 +8,31 @@ public class DungeonManager : MonoBehaviour
     [SerializeField] private NavMeshSurface navMeshSurface;
     [SerializeField] private CombatRoomController combatRoomController;
 
+    private int stage = 0;
+
     private void Awake()
     {
-        generator.GenerateMap(Random.Range(0, 1000));
+        GenerateMap();
+    }
+
+    public void FinishStage()
+    {
+        stage++;
+        Debug.Log(stage);
+        GenerateMap();
+    }
+
+    private void GenerateMap()
+    {
+        generator.GenerateMap(Random.Range(0, 100000));
+        navMeshSurface.hideEditorLogs = true;
         navMeshSurface.RemoveData();
         navMeshSurface.BuildNavMesh();
+        Invoke(nameof(SetupCombatRoomController), .1f);
     }
 
-    private void Start()
+    private void SetupCombatRoomController()
     {
-        combatRoomController.Setup();
+        combatRoomController.Setup(this);
     }
 }
-
