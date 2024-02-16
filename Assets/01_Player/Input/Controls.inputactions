@@ -40,6 +40,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "CycleWeapon",
+                    "type": "Button",
+                    "id": "cb7be358-d631-40a6-aade-afd16bdb3ece",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TurnEnd",
+                    "type": "Button",
+                    "id": "6e9cc8df-5f08-4972-ba8d-030b746a9f55",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -139,6 +157,39 @@
                     "processors": "",
                     "groups": "Keyboard_Mouse",
                     "action": "SelectLocation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d094e867-3ccd-4be5-9a5c-872fabe88f4b",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard_Mouse",
+                    "action": "CycleWeapon",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d35fa18c-be56-4954-ba91-fc3a65ff8a10",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TurnEnd",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "85dba6df-f33e-48f5-9376-be773d1f64a6",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard_Mouse",
+                    "action": "TurnEnd",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -10,15 +10,23 @@ public class DungeonManager : MonoBehaviour
 
     private int stage = 0;
 
+    private GameUIView gameUIView;
+
     private void Awake()
     {
         GenerateMap();
     }
 
+    private void Start()
+    {
+        gameUIView = (GameUIView)GameManager.UIViewManager.GetView(typeof(GameUIView));
+        gameUIView.SetLevelIndicatorText(stage.ToString());
+    }
+
     public void FinishStage()
     {
         stage++;
-        Debug.Log(stage);
+        gameUIView.SetLevelIndicatorText(stage.ToString());
         GenerateMap();
     }
 

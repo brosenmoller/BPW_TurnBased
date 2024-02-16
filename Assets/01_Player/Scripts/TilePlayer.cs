@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,12 +8,14 @@ public class TilePlayer : TileEntity
     [Header("Player Settings")]
     [SerializeField] protected float cursorDragSpeed;
     [SerializeField] protected Transform cursor;
+    [SerializeField] protected int maxWeapons = 4;
 
     private Camera mainCamera;
     private Vector3 cursorTargetPosition;
     private SpriteRenderer cursorSpriteRenderer;
 
     private GameUIView gameUIView;
+    private List<Weapon> unlockedWeapons;
 
     public override void OnAwake()
     {
@@ -20,11 +23,14 @@ public class TilePlayer : TileEntity
         mainCamera = Camera.main;
         ContentType = TileContentType.Player;
         cursorSpriteRenderer = cursor.GetComponent<SpriteRenderer>();
+
+        unlockedWeapons = new List<Weapon>() { selectedWeapon };
     }
 
     private void Start()
     {
         gameUIView = (GameUIView)GameManager.UIViewManager.GetView(typeof(GameUIView));
+        gameUIView.UpdateWeaponDisplay(unlockedWeapons.ToArray(), selectedWeapon, maxWeapons);
     }
 
     protected override void OnTurnStart()
@@ -34,11 +40,65 @@ public class TilePlayer : TileEntity
 
         GameManager.InputManager.controls.Default.MouseAiming.performed += MoveCursor;
         GameManager.InputManager.controls.Default.SelectLocation.performed += Select;
+        GameManager.InputManager.controls.Default.CycleWeapon.performed += CycleWeapon;
 
         gameUIView.OnSwitchedToMovement.RemoveAllListeners();
         gameUIView.OnSwitchedToAttack.RemoveAllListeners();
+        gameUIView.OnTurnEnd.RemoveAllListeners();
         gameUIView.OnSwitchedToMovement.AddListener(() => { SwitchMode(Mode.Moving); });
         gameUIView.OnSwitchedToAttack.AddListener(() => { SwitchMode(Mode.Attacking); });
+        gameUIView.OnTurnEnd.AddListener(StartEndTurn);
+    }
+
+    private void StartEndTurn()
+    {
+        if (!inTurn) { return; }
+
+        rangeOverlayGenerator.ClearRangeOverlay();
+        OnTurnEnd();
+        TurnEnd();
+    }
+
+    private void CycleWeapon(InputAction.CallbackContext callbackContext)
+    {
+        int nextIndex = unlockedWeapons.FindIndex(a => a == selectedWeapon);
+        nextIndex++;
+        if (nextIndex >= unlockedWeapons.Count) { nextIndex = 0; }
+
+        selectedWeapon = unlockedWeapons[nextIndex];
+        
+        CalculateAttackTiles();
+
+        if (currentMode == Mode.Attacking) 
+        {
+            rangeOverlayGenerator.ClearRangeOverlay();
+            GenerateAttackRangeOverlay();
+            
+
+            if (surroundingTilesAttackRange[TileContentType.Enemy].Count <= 0)
+            {
+                SwitchMode(Mode.Moving);
+                attackTargetPosition = null;
+            }
+            else
+            {
+                attackTargetPosition = surroundingTilesAttackRange[TileContentType.Enemy][Random.Range(0, surroundingTilesAttackRange[TileContentType.Enemy].Count - 1)];
+                cursorTargetPosition = (Vector3)attackTargetPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
+            }
+        }
+
+        gameUIView.UpdateWeaponDisplay(unlockedWeapons.ToArray(), selectedWeapon, maxWeapons);
+
+    }
+
+    public override void SetWeapon(Weapon weapon)
+    {
+        base.SetWeapon(weapon);
+        if (!unlockedWeapons.Contains(weapon))
+        {
+            unlockedWeapons.Add(weapon);
+        }
+        gameUIView.UpdateWeaponDisplay(unlockedWeapons.ToArray(), selectedWeapon, maxWeapons);
     }
 
     protected override void OnTurnEnd()
@@ -47,6 +107,7 @@ public class TilePlayer : TileEntity
 
         GameManager.InputManager.controls.Default.MouseAiming.performed -= MoveCursor;
         GameManager.InputManager.controls.Default.SelectLocation.performed -= Select;
+        GameManager.InputManager.controls.Default.CycleWeapon.performed -= CycleWeapon;
 
         gameUIView.OnSwitchedToMovement.RemoveAllListeners();
         gameUIView.OnSwitchedToAttack.RemoveAllListeners();
@@ -57,7 +118,8 @@ public class TilePlayer : TileEntity
         if (surroundingTilesMovementRange == null) { return; }
 
         rangeOverlayGenerator.GenerateMovementRangeOverlay(
-            surroundingTilesMovementRange[TileContentType.Empty].ToArray(), 
+            surroundingTilesMovementRange[TileContentType.Empty]
+            .Concat(surroundingTilesMovementRange[TileContentType.WeaponPickup]).ToArray(), 
             surroundingTilesMovementRange[TileContentType.Enemy].ToArray()
         );
     }
@@ -91,6 +153,8 @@ public class TilePlayer : TileEntity
 
         if (currentMode == Mode.Moving)
         {
+            cursorSpriteRenderer.color = Color.blue;
+
             if (surroundingTilesMovementRange[TileContentType.Empty].Count <= 0)
             {
                 movingModeAvailable = false;
@@ -98,7 +162,6 @@ public class TilePlayer : TileEntity
                 return;
             }
 
-            cursorSpriteRenderer.color = Color.blue;
             movementTargetPosition = surroundingTilesMovementRange[TileContentType.Empty][Random.Range(0, surroundingTilesMovementRange[TileContentType.Empty].Count - 1)];
             cursorTargetPosition = (Vector3)movementTargetPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
 
@@ -108,14 +171,14 @@ public class TilePlayer : TileEntity
         }
         else if (currentMode == Mode.Attacking)
         {
+            cursorSpriteRenderer.color = Color.red;
+
             if (surroundingTilesAttackRange[TileContentType.Enemy].Count <= 0)
             {
-                if (!movingModeAvailable) { attackingModeAvailable = false; }
                 SwitchMode(Mode.Moving);
                 return;
             }
 
-            cursorSpriteRenderer.color = Color.red;
             attackTargetPosition = surroundingTilesAttackRange[TileContentType.Enemy][Random.Range(0, surroundingTilesAttackRange[TileContentType.Enemy].Count - 1)];
             cursorTargetPosition = (Vector3)attackTargetPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
 
@@ -139,7 +202,8 @@ public class TilePlayer : TileEntity
 
     private void MovementCursor(Vector3Int newGridPosition)
     {
-        if (!surroundingTilesMovementRange[TileContentType.Empty].Contains(newGridPosition)) { return;}
+        if (!surroundingTilesMovementRange[TileContentType.Empty].Contains(newGridPosition) &&
+            !surroundingTilesMovementRange[TileContentType.WeaponPickup].Contains(newGridPosition)) { return; }
 
         cursorTargetPosition = newGridPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
         movementTargetPosition = newGridPosition;

@@ -20,6 +20,12 @@ public class TileEnemy : TileEntity
         }
     }
 
+    protected override void OnNoModeAvailable()
+    {
+        OnTurnEnd();
+        TurnEnd();
+    }
+
     protected override void OnSwitchMode()
     {
         if (currentMode == Mode.Moving) 

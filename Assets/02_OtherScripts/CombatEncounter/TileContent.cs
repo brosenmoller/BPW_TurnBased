@@ -27,6 +27,8 @@ public abstract class TileContent : MonoBehaviour
         OnAwake();
     }
 
+    public virtual void Interact(TileEntity tileEntity) { }
+
     public virtual void OnAwake() { }
 
     protected void UpdateCombatRoom()

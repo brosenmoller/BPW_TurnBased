@@ -2,21 +2,25 @@
 
 public class TileWeaponPickup : TileContent
 {
-    [SerializeField] private Weapon weapon;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
+    public Weapon Weapon { get; private set; }
 
     public override void OnAwake()
     {
-        GetComponentInChildren<SpriteRenderer>().sprite = weapon.icon;
+        ContentType = TileContentType.WeaponPickup;
     }
 
-    public void PickupWeapon(TileEntity tileEntity)
+    public override void Interact(TileEntity tileEntity)
     {
-        tileEntity.selectedWeapon = weapon;
+        tileEntity.SetWeapon(Weapon);
         combatRoomController.RemoveTileContent(this);
+        Debug.Log("Pickup");
     }
 
     public void SetWeapon(Weapon weapon)
     {
-        this.weapon = weapon;
+        Weapon = weapon;
+        spriteRenderer.sprite = Weapon.icon;
     }
 }

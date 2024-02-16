@@ -77,6 +77,7 @@ public class CombatRoomController : MonoBehaviour
         }
 
         SpawnEnemies();
+        SpawnWeaponPickups();
 
         turnOrdering.AddRange(enemyList);
 
@@ -136,7 +137,7 @@ public class CombatRoomController : MonoBehaviour
             }
             while (gridTilesContent[randomPosition] != null);
 
-            GameObject newWeapon = Instantiate(weaponPickupPrefab, randomPosition + new Vector3(.5f, .5f), Quaternion.Euler(-90, 0, 0));
+            GameObject newWeapon = Instantiate(weaponPickupPrefab, randomPosition + new Vector3(.5f, .5f), Quaternion.Euler(0, 0, -90));
             TileWeaponPickup weaponTile = newWeapon.GetComponent<TileWeaponPickup>();
             
             Weapon randomWeapon = possibleWeapons[Random.Range(0, possibleWeapons.Length)];
@@ -152,9 +153,10 @@ public class CombatRoomController : MonoBehaviour
 
         foreach (Vector3Int key in gridTilesContent.Keys)
         {
-            if (gridTilesContent[key] == null) { Gizmos.color = Color.blue; }
+            if (gridTilesContent[key] == null || gridTilesContent[key].ContentType == TileContentType.Empty) { Gizmos.color = Color.blue; }
             else if (gridTilesContent[key].ContentType == TileContentType.Player) { Gizmos.color = Color.green; }
             else if (gridTilesContent[key].ContentType == TileContentType.Enemy) { Gizmos.color = Color.red; }
+            else if (gridTilesContent[key].ContentType == TileContentType.WeaponPickup) { Gizmos.color = Color.yellow; }
 
             Gizmos.DrawWireCube(key + new Vector3(.5f, .5f), new Vector3(.8f, .8f, 0));
         }

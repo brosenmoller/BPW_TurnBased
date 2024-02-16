@@ -31,6 +31,7 @@ public abstract class TileEntity : TileContent, IDamageAble
     protected bool movingModeAvailable;
     protected bool executingMode;
     protected Mode currentMode;
+    protected bool inTurn;
 
     protected Vector3Int? movementTargetPosition;
     protected Vector3Int? attackTargetPosition;
@@ -63,6 +64,7 @@ public abstract class TileEntity : TileContent, IDamageAble
         movementTargetPosition = null;
         attackTargetPosition = null;
         agent.enabled = true;
+        inTurn = true;
 
         CalculateMovementTiles();
         CalculateAttackTiles();
@@ -73,6 +75,7 @@ public abstract class TileEntity : TileContent, IDamageAble
     {
         UpdateCombatRoom();
         combatRoomController.CurrentTurnEnd();
+        inTurn = false;
     }
 
     protected void CalculateMovementTiles()
@@ -108,22 +111,23 @@ public abstract class TileEntity : TileContent, IDamageAble
         else if (mode == Mode.Attacking && attackingModeAvailable) { currentMode = mode; OnSwitchMode(); }
         else if (!movingModeAvailable && !attackingModeAvailable)
         {
-            OnTurnEnd();
-            TurnEnd();
+            OnNoModeAvailable();
         }
     }
+
+    protected virtual void OnNoModeAvailable() { }
 
     protected virtual void OnSwitchMode() { }
 
     public void ExecuteMode()
     {
-        if (currentMode == Mode.Moving) 
+        if (currentMode == Mode.Moving && movingModeAvailable) 
         {
             movingModeAvailable = false;
             executingMode = true;
             ExcuteMovingMode();
         }
-        else if (currentMode == Mode.Attacking)
+        else if (currentMode == Mode.Attacking && attackTargetPosition != null && attackingModeAvailable)
         {
             attackingModeAvailable = false;
             executingMode = true;
@@ -147,6 +151,12 @@ public abstract class TileEntity : TileContent, IDamageAble
     {
         executingMode = false;
         agent.isStopped = true;
+
+        if (combatRoomController.gridTilesContent[grid.WorldToCell(transform.position + new Vector3(.2f, .2f, 0))] != null)
+        {
+            combatRoomController.gridTilesContent[grid.WorldToCell(transform.position + new Vector3(.2f, .2f, 0))].Interact(this);
+        }
+
         UpdateCombatRoom();
         if (attackingModeAvailable) 
         { 
@@ -160,9 +170,13 @@ public abstract class TileEntity : TileContent, IDamageAble
         }
         else
         {
-            OnTurnEnd();
-            TurnEnd();
+            OnNoModeAvailable();
         }
+    }
+
+    public virtual void SetWeapon(Weapon weapon)
+    {
+        selectedWeapon = weapon;
     }
 
     public void ApplyDamge(int damage)

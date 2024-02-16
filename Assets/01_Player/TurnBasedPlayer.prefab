@@ -153,10 +153,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementRange: 4
-  selectedWeapon: {fileID: 11400000, guid: a97f699795e76a047ba9e97f773be1d6, type: 2}
   maxHealth: 1000
   whiteFlashMaterial: {fileID: 2100000, guid: 020d8e5e5b968184e9aa42347ea2802f, type: 2}
   spriteRenderer: {fileID: 8351770880218253449}
   healthBar: {fileID: 0}
+  selectedWeapon: {fileID: 11400000, guid: bd7a722ee59368742a7394295efdfc19, type: 2}
   cursorDragSpeed: 10
   cursor: {fileID: 0}
+  maxWeapons: 3
