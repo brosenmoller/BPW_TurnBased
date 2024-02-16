@@ -3,6 +3,9 @@ using UnityEngine.AI;
 
 public class DungeonManager : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField] private int finalStage;
+
     [Header("References")]
     [SerializeField] private DungeonMapGenerator generator;
     [SerializeField] private NavMeshSurface navMeshSurface;
@@ -25,6 +28,12 @@ public class DungeonManager : MonoBehaviour
 
     public void FinishStage()
     {
+        if (stage >= finalStage)
+        {
+            GameManager.UIViewManager.Show(typeof(WinView));
+            return;
+        }
+
         stage++;
         gameUIView.SetLevelIndicatorText(stage.ToString());
         GenerateMap();
