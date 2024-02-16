@@ -14,6 +14,7 @@ public class CombatRoomController : MonoBehaviour
     [SerializeField] private GameObject enemy2Prefab;
 
     [Header("Weapons")]
+    [SerializeField] private Transform weaponParent;
     [SerializeField] private GameObject weaponPickupPrefab;
     [SerializeField] private Weapon[] possibleWeapons;
     
@@ -127,6 +128,11 @@ public class CombatRoomController : MonoBehaviour
 
     private void SpawnWeaponPickups()
     {
+        foreach (Transform child in weaponParent)
+        {
+            Destroy(child.gameObject);
+        }
+
         int weaonCount = Random.Range(0, 2);
         for (int i = 0; i < weaonCount; i++)
         {
@@ -137,7 +143,7 @@ public class CombatRoomController : MonoBehaviour
             }
             while (gridTilesContent[randomPosition] != null);
 
-            GameObject newWeapon = Instantiate(weaponPickupPrefab, randomPosition + new Vector3(.5f, .5f), Quaternion.Euler(0, 0, -90));
+            GameObject newWeapon = Instantiate(weaponPickupPrefab, randomPosition + new Vector3(.5f, .5f), Quaternion.Euler(0, 0, -90), weaponParent);
             TileWeaponPickup weaponTile = newWeapon.GetComponent<TileWeaponPickup>();
             
             Weapon randomWeapon = possibleWeapons[Random.Range(0, possibleWeapons.Length)];

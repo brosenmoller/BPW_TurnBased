@@ -253,7 +253,7 @@ GameObject:
   m_Component:
   - component: {fileID: 149004301}
   m_Layer: 0
-  m_Name: Enemies
+  m_Name: EnemyParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -976,6 +976,7 @@ MonoBehaviour:
   enemyParent: {fileID: 149004301}
   enemy1Prefab: {fileID: 4928332897947974689, guid: 3171993a62c571c41b3f295b7effa807, type: 3}
   enemy2Prefab: {fileID: 4056811684173345026, guid: a6582a5cd7340e34fa6f4bd435b4b271, type: 3}
+  weaponParent: {fileID: 1436313855}
   weaponPickupPrefab: {fileID: 7575316448330650976, guid: eb07446dd444a3e4ca501fcf47a8cd99, type: 3}
   possibleWeapons:
   - {fileID: 11400000, guid: a97f699795e76a047ba9e97f773be1d6, type: 2}
@@ -3132,7 +3133,7 @@ RectTransform:
   m_Children:
   - {fileID: 1654332132}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3187,6 +3188,37 @@ MonoBehaviour:
   movementRangeOverlayTile: {fileID: 11400000, guid: 0aee7e0ddf54c2c4c850aeb4f1e79916, type: 2}
   enemyHighlightOverlayTile: {fileID: 11400000, guid: a9dba001d0b8b104787d95ca4796df19, type: 2}
   attackRangeOverlayTile: {fileID: 11400000, guid: 388c8417a2d581441bfc245e993d6967, type: 2}
+--- !u!1 &1436313854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1436313855}
+  m_Layer: 0
+  m_Name: WeaponParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1436313855
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436313854}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1437554609
 GameObject:
   m_ObjectHideFlags: 0
@@ -16303,7 +16335,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6482489094538115602, guid: 91408b98d40e5114e958200918546595, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6482489094538115602, guid: 91408b98d40e5114e958200918546595, type: 3}
       propertyPath: m_LocalPosition.x

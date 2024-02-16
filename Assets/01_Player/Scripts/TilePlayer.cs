@@ -173,14 +173,15 @@ public class TilePlayer : TileEntity
         {
             cursorSpriteRenderer.color = Color.red;
 
-            if (surroundingTilesAttackRange[TileContentType.Enemy].Count <= 0)
+            if (surroundingTilesAttackRange[TileContentType.Enemy].Count > 0)
             {
-                SwitchMode(Mode.Moving);
-                return;
+                attackTargetPosition = surroundingTilesAttackRange[TileContentType.Enemy][Random.Range(0, surroundingTilesAttackRange[TileContentType.Enemy].Count - 1)];
+                cursorTargetPosition = (Vector3)attackTargetPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
             }
-
-            attackTargetPosition = surroundingTilesAttackRange[TileContentType.Enemy][Random.Range(0, surroundingTilesAttackRange[TileContentType.Enemy].Count - 1)];
-            cursorTargetPosition = (Vector3)attackTargetPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
+            else
+            {
+                cursor.gameObject.SetActive(false);
+            }
 
             rangeOverlayGenerator.ClearRangeOverlay();
             gameUIView.HighligtAttackMode();
