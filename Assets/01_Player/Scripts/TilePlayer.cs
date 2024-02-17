@@ -118,6 +118,7 @@ public class TilePlayer : TileEntity
         GameManager.InputManager.controls.Default.MouseAiming.performed -= MoveCursor;
         GameManager.InputManager.controls.Default.SelectLocation.performed -= Select;
         GameManager.InputManager.controls.Default.CycleWeapon.performed -= CycleWeapon;
+        GameManager.InputManager.controls.Default.DropWeapon.performed -= DropSelectedWeapon;       
 
         gameUIView.OnSwitchedToMovement.RemoveAllListeners();
         gameUIView.OnSwitchedToAttack.RemoveAllListeners();
@@ -245,11 +246,14 @@ public class TilePlayer : TileEntity
     {
         GameManager.InputManager.controls.Default.MouseAiming.performed -= MoveCursor;
         GameManager.InputManager.controls.Default.SelectLocation.performed -= Select;
+        GameManager.InputManager.controls.Default.CycleWeapon.performed -= CycleWeapon;
+        GameManager.InputManager.controls.Default.DropWeapon.performed -= DropSelectedWeapon;
     }
 
     protected override void OnDeath()
     {
         OnTurnEnd();
-        GameManager.Instance.ReloadCurrentScene();
+        GameManager.InputManager.Setup();
+        GameManager.UIViewManager.Show(typeof(GameOverView));
     }
 }

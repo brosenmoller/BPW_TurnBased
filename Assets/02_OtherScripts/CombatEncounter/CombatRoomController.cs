@@ -5,8 +5,11 @@ using System.Linq;
 
 public class CombatRoomController : MonoBehaviour
 {
-    [Header("Tilemap")]
-    [SerializeField] private Tilemap groundTilemap;
+    [Header("Settings")]
+    [SerializeField] private int minEnemies = 1;
+    [SerializeField] private int maxEnemies = 2;
+    [SerializeField] private int minWeapons = 0;
+    [SerializeField] private int maxWeapons = 1;
 
     [Header("Enemies")]
     [SerializeField] private Transform enemyParent;
@@ -17,7 +20,10 @@ public class CombatRoomController : MonoBehaviour
     [SerializeField] private Transform weaponParent;
     [SerializeField] private GameObject weaponPickupPrefab;
     [SerializeField] private Weapon[] possibleWeapons;
-    
+
+    [Header("Tilemap")]
+    [SerializeField] private Tilemap groundTilemap;
+
     private Grid grid;
     private DungeonManager dungeonManager;
 
@@ -107,7 +113,7 @@ public class CombatRoomController : MonoBehaviour
 
     private void SpawnEnemies()
     {
-        int enemyCount = Random.Range(1, 2);
+        int enemyCount = Random.Range(minEnemies, maxEnemies + 1);
         for (int i = 0; i < enemyCount; i++)
         {
             Vector3Int randomPosition;
@@ -133,7 +139,7 @@ public class CombatRoomController : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        int weaonCount = Random.Range(0, 2);
+        int weaonCount = Random.Range(minWeapons, maxWeapons + 1);
         for (int i = 0; i < weaonCount; i++)
         {
             Vector3Int randomPosition;

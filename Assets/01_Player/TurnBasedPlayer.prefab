@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementRange: 4
-  maxHealth: 1000
+  maxHealth: 100
   whiteFlashMaterial: {fileID: 2100000, guid: 020d8e5e5b968184e9aa42347ea2802f, type: 2}
   spriteRenderer: {fileID: 8351770880218253449}
   healthBar: {fileID: 0}

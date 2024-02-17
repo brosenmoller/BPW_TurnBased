@@ -29,11 +29,13 @@ public class RangedWeapon : Weapon
 
         fireParticles.Play();
 
-        while ((bullet.transform.position - origin).sqrMagnitude < sqrDistance)
+        while (bullet != null && (bullet.transform.position - origin).sqrMagnitude < sqrDistance)
         {
             bullet.transform.position += bulletSpeed * Time.deltaTime * direction;
             yield return null;
         }
+
+        if (bullet == null) { yield break; }
 
         renderer.enabled = false;
         destoryParticles.Play();
