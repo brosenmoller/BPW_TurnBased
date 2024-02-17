@@ -41,6 +41,7 @@ public class TilePlayer : TileEntity
         GameManager.InputManager.controls.Default.MouseAiming.performed += MoveCursor;
         GameManager.InputManager.controls.Default.SelectLocation.performed += Select;
         GameManager.InputManager.controls.Default.CycleWeapon.performed += CycleWeapon;
+        GameManager.InputManager.controls.Default.DropWeapon.performed += DropSelectedWeapon;
 
         gameUIView.OnSwitchedToMovement.RemoveAllListeners();
         gameUIView.OnSwitchedToAttack.RemoveAllListeners();
@@ -57,6 +58,15 @@ public class TilePlayer : TileEntity
         rangeOverlayGenerator.ClearRangeOverlay();
         OnTurnEnd();
         TurnEnd();
+    }
+
+    private void DropSelectedWeapon(InputAction.CallbackContext callbackContext)
+    {
+        if (unlockedWeapons.Count < 2) { return; }
+
+        unlockedWeapons.Remove(selectedWeapon);
+        selectedWeapon = unlockedWeapons[0];
+        gameUIView.UpdateWeaponDisplay(unlockedWeapons.ToArray(), selectedWeapon, maxWeapons);
     }
 
     private void CycleWeapon(InputAction.CallbackContext callbackContext)

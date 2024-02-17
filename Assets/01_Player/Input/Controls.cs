@@ -80,6 +80,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DropWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""3bfbaa07-30dd-4748-9060-680c840f671e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -214,6 +223,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""TurnEnd"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2906394-8fa0-4ba2-9eb2-7dd87317fbba"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -256,6 +276,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Default_SelectLocation = m_Default.FindAction("SelectLocation", throwIfNotFound: true);
         m_Default_CycleWeapon = m_Default.FindAction("CycleWeapon", throwIfNotFound: true);
         m_Default_TurnEnd = m_Default.FindAction("TurnEnd", throwIfNotFound: true);
+        m_Default_DropWeapon = m_Default.FindAction("DropWeapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -323,6 +344,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Default_SelectLocation;
     private readonly InputAction m_Default_CycleWeapon;
     private readonly InputAction m_Default_TurnEnd;
+    private readonly InputAction m_Default_DropWeapon;
     public struct DefaultActions
     {
         private @Controls m_Wrapper;
@@ -333,6 +355,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         public InputAction @SelectLocation => m_Wrapper.m_Default_SelectLocation;
         public InputAction @CycleWeapon => m_Wrapper.m_Default_CycleWeapon;
         public InputAction @TurnEnd => m_Wrapper.m_Default_TurnEnd;
+        public InputAction @DropWeapon => m_Wrapper.m_Default_DropWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -360,6 +383,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @TurnEnd.started += instance.OnTurnEnd;
             @TurnEnd.performed += instance.OnTurnEnd;
             @TurnEnd.canceled += instance.OnTurnEnd;
+            @DropWeapon.started += instance.OnDropWeapon;
+            @DropWeapon.performed += instance.OnDropWeapon;
+            @DropWeapon.canceled += instance.OnDropWeapon;
         }
 
         private void UnregisterCallbacks(IDefaultActions instance)
@@ -382,6 +408,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @TurnEnd.started -= instance.OnTurnEnd;
             @TurnEnd.performed -= instance.OnTurnEnd;
             @TurnEnd.canceled -= instance.OnTurnEnd;
+            @DropWeapon.started -= instance.OnDropWeapon;
+            @DropWeapon.performed -= instance.OnDropWeapon;
+            @DropWeapon.canceled -= instance.OnDropWeapon;
         }
 
         public void RemoveCallbacks(IDefaultActions instance)
@@ -425,5 +454,6 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         void OnSelectLocation(InputAction.CallbackContext context);
         void OnCycleWeapon(InputAction.CallbackContext context);
         void OnTurnEnd(InputAction.CallbackContext context);
+        void OnDropWeapon(InputAction.CallbackContext context);
     }
 }

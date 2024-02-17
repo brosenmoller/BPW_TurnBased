@@ -141,30 +141,69 @@ public class DungeonMapGenerator : MonoBehaviour
 
     private void PlacePlayer()
     {
+        bool couldPlacePlayer = TryPlacePlayerWithAdjecentEmptyTiles();
+
+        if (!couldPlacePlayer)
+        {
+            PlacePlayerOnFirstEmptyTile();
+        }
+    }
+
+    private bool TryPlacePlayerWithAdjecentEmptyTiles()
+    {
         for (int x = 0; x < borderedMapSize; x++)
         {
             for (int y = 0; y < borderedMapSize; y++)
             {
-                int adjecentEmptyTileCounter = 0;
-
-                for (int gridX = x - 1; gridX <= x + 1; gridX++)
-                {
-                    for (int gridY = y - 1; gridY <= y + 1; gridY++)
-                    {
-                        int mapIndex = gridX + gridY * borderedMapSize;
-                        if (mapIndex >= map.Length || mapIndex < 0) { continue; }
-
-                        if (map[mapIndex] == 0)
-                        {
-                            adjecentEmptyTileCounter++;
-                        }
-                    }
-                }
+                int adjecentEmptyTileCounter = CountAdjecentEmptyTiles(x, y);
 
                 if (adjecentEmptyTileCounter == 9)
                 {
                     playerPrefab.transform.position = new Vector3(x + .5f, y + .5f, 0);
                     playerPrefab.SetActive(true);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private int CountAdjecentEmptyTiles(int centerX, int centerY)
+    {
+        int adjecentEmptyTileCounter = 0;
+
+        for (int gridX = centerX - 1; gridX <= centerX + 1; gridX++)
+        {
+            for (int gridY = centerY - 1; gridY <= centerY + 1; gridY++)
+            {
+                int mapIndex = gridX + gridY * borderedMapSize;
+                if (mapIndex >= map.Length || mapIndex < 0) { continue; }
+
+                if (map[mapIndex] == 0)
+                {
+                    adjecentEmptyTileCounter++;
+                }
+            }
+        }
+
+        return adjecentEmptyTileCounter;
+    }
+
+    private void PlacePlayerOnFirstEmptyTile()
+    {
+        for (int x = 0; x < borderedMapSize; x++)
+        {
+            for (int y = 0; y < borderedMapSize; y++)
+            {
+                int mapIndex = x + y * borderedMapSize;
+                if (mapIndex >= map.Length || mapIndex < 0) { continue; }
+
+                if (map[mapIndex] == 0)
+                {
+                    playerPrefab.transform.position = new Vector3(x + .5f, y + .5f, 0);
+                    playerPrefab.SetActive(true);
+                    return;
                 }
             }
         }

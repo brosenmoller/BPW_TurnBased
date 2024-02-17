@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "DropWeapon",
+                    "type": "Button",
+                    "id": "3bfbaa07-30dd-4748-9060-680c840f671e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -190,6 +199,17 @@
                     "processors": "",
                     "groups": "Keyboard_Mouse",
                     "action": "TurnEnd",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d2906394-8fa0-4ba2-9eb2-7dd87317fbba",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DropWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
