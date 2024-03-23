@@ -1274,6 +1274,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a97f699795e76a047ba9e97f773be1d6, type: 2}
   - {fileID: 11400000, guid: bd7a722ee59368742a7394295efdfc19, type: 2}
   groundTilemap: {fileID: 1134617251}
+  newLevelHolePrefab: {fileID: 6558295965628574011, guid: c388ccc503e56bd4dabd70a345247313, type: 3}
 --- !u!1 &762926919
 GameObject:
   m_ObjectHideFlags: 0
@@ -17538,7 +17539,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 189869585
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 22
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16

@@ -24,6 +24,9 @@ public class CombatRoomController : MonoBehaviour
     [Header("Tilemap")]
     [SerializeField] private Tilemap groundTilemap;
 
+    [Header("Other")]
+    [SerializeField] private GameObject newLevelHolePrefab;
+
     private Grid grid;
     private DungeonManager dungeonManager;
 
@@ -35,6 +38,8 @@ public class CombatRoomController : MonoBehaviour
     private readonly List<TileEntity> turnOrdering = new();
     private int currentTurnIndex;
     private Vector2Int startCoordinate = new(0, 0);
+
+    private GameObject newLevelHole;
 
     public void RemoveTileContent(TileContent tile)
     {
@@ -62,6 +67,7 @@ public class CombatRoomController : MonoBehaviour
         enemyList = new List<TileEnemy>();
         playerList = FindObjectsOfType<TilePlayer>().ToList();
         turnOrdering.Clear();
+        if (newLevelHole != null) { Destroy(newLevelHole); }
 
         currentTurnIndex = 0;
         turnOrdering.AddRange(playerList);
@@ -96,14 +102,25 @@ public class CombatRoomController : MonoBehaviour
         currentTurnIndex++;
         if (currentTurnIndex >= turnOrdering.Count) { currentTurnIndex = 0; }
 
-        if (enemyList.Count <= 0)
+        if (enemyList.Count <= 0 && newLevelHole == null)
         {
-            dungeonManager.FinishStage();
+            Vector3Int randomPosition;
+            do
+            {
+                randomPosition = gridTilesContent.ElementAt(Random.Range(0, gridTilesContent.Count)).Key;
+            }
+            while (gridTilesContent[randomPosition] != null || (gridTilesContent[randomPosition] != null && gridTilesContent[randomPosition].ContentType == TileContentType.Empty));
+
+            newLevelHole = Instantiate(newLevelHolePrefab, randomPosition + new Vector3(.5f, .5f), Quaternion.identity);
+            gridTilesContent[randomPosition] = newLevelHole.GetComponent<TileContent>();
         }
-        else
-        {
-            Invoke(nameof(StartNextTurn), .001f);
-        }
+
+        Invoke(nameof(StartNextTurn), .001f);
+    }
+
+    public void FinishStage()
+    {
+        dungeonManager.FinishStage();
     }
 
     private void StartNextTurn()
@@ -149,10 +166,12 @@ public class CombatRoomController : MonoBehaviour
             }
             while (gridTilesContent[randomPosition] != null);
 
+            Weapon randomWeapon = possibleWeapons[Random.Range(0, possibleWeapons.Length)];
+            if (playerList[0].unlockedWeapons.Contains(randomWeapon)) { return; }
+
             GameObject newWeapon = Instantiate(weaponPickupPrefab, randomPosition + new Vector3(.5f, .5f), Quaternion.Euler(0, 0, -90), weaponParent);
             TileWeaponPickup weaponTile = newWeapon.GetComponent<TileWeaponPickup>();
             
-            Weapon randomWeapon = possibleWeapons[Random.Range(0, possibleWeapons.Length)];
             weaponTile.SetWeapon(randomWeapon);
 
             gridTilesContent[randomPosition] = weaponTile;

@@ -9,6 +9,7 @@ public enum TileContentType
     Player = 1,
     Enemy = 2,
     WeaponPickup = 3,
+    NewLevelHole = 4
 }
 
 public abstract class TileContent : MonoBehaviour 

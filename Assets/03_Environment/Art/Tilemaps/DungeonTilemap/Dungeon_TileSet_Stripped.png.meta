@@ -650,7 +650,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -671,7 +671,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -692,7 +692,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -700,6 +700,27 @@ TextureImporter:
       bones: []
       spriteID: 688d6d07d0aad7b4f8815348c3943a8e
       internalID: -324140044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Dungeon_TileSet_Stripped_28
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba4237a0abd238649a8736aa66325b67
+      internalID: -473799874
       vertices: []
       indices: 
       edges: []
@@ -715,34 +736,35 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Dungeon_TileSet_Stripped_25: 1132433768
-      Dungeon_TileSet_Stripped_16: 241232675
-      Dungeon_TileSet_Stripped_22: -2143483545
-      Dungeon_TileSet_Stripped_27: -324140044
-      Dungeon_TileSet_Stripped_24: 1857914848
-      Dungeon_TileSet_Stripped_2: 335418884
-      Dungeon_TileSet_Stripped_7: -104572340
-      Dungeon_TileSet_Stripped_11: -1137434639
-      Dungeon_TileSet_Stripped_14: -1484567014
-      Dungeon_TileSet_Stripped_15: 754756089
-      Dungeon_TileSet_Stripped_23: 995420291
-      Dungeon_TileSet_Stripped_6: -321328862
-      Dungeon_TileSet_Stripped_9: 1635909511
-      Dungeon_TileSet_Stripped_20: -1581686208
-      Dungeon_TileSet_Stripped_21: -1671227711
-      Dungeon_TileSet_Stripped_4: 736005685
-      Dungeon_TileSet_Stripped_10: 177845202
-      Dungeon_TileSet_Stripped_18: 31043976
       Dungeon_TileSet_Stripped_0: 1782084068
+      Dungeon_TileSet_Stripped_1: -1486860925
+      Dungeon_TileSet_Stripped_10: 177845202
+      Dungeon_TileSet_Stripped_11: -1137434639
       Dungeon_TileSet_Stripped_12: -415645484
       Dungeon_TileSet_Stripped_13: 959334464
+      Dungeon_TileSet_Stripped_14: -1484567014
+      Dungeon_TileSet_Stripped_15: 754756089
+      Dungeon_TileSet_Stripped_16: 241232675
       Dungeon_TileSet_Stripped_17: 1873599102
+      Dungeon_TileSet_Stripped_18: 31043976
       Dungeon_TileSet_Stripped_19: 325019749
-      Dungeon_TileSet_Stripped_1: -1486860925
-      Dungeon_TileSet_Stripped_8: -31728177
-      Dungeon_TileSet_Stripped_3: 1965776489
-      Dungeon_TileSet_Stripped_5: -1940363702
+      Dungeon_TileSet_Stripped_2: 335418884
+      Dungeon_TileSet_Stripped_20: -1581686208
+      Dungeon_TileSet_Stripped_21: -1671227711
+      Dungeon_TileSet_Stripped_22: -2143483545
+      Dungeon_TileSet_Stripped_23: 995420291
+      Dungeon_TileSet_Stripped_24: 1857914848
+      Dungeon_TileSet_Stripped_25: 1132433768
       Dungeon_TileSet_Stripped_26: -1447503697
+      Dungeon_TileSet_Stripped_27: -324140044
+      Dungeon_TileSet_Stripped_28: -473799874
+      Dungeon_TileSet_Stripped_3: 1965776489
+      Dungeon_TileSet_Stripped_4: 736005685
+      Dungeon_TileSet_Stripped_5: -1940363702
+      Dungeon_TileSet_Stripped_6: -321328862
+      Dungeon_TileSet_Stripped_7: -104572340
+      Dungeon_TileSet_Stripped_8: -31728177
+      Dungeon_TileSet_Stripped_9: 1635909511
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

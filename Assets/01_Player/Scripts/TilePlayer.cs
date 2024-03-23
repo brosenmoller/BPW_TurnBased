@@ -15,7 +15,7 @@ public class TilePlayer : TileEntity
     private SpriteRenderer cursorSpriteRenderer;
 
     private GameUIView gameUIView;
-    private List<Weapon> unlockedWeapons;
+    [HideInInspector] public List<Weapon> unlockedWeapons;
 
     public override void OnAwake()
     {
@@ -130,7 +130,8 @@ public class TilePlayer : TileEntity
 
         rangeOverlayGenerator.GenerateMovementRangeOverlay(
             surroundingTilesMovementRange[TileContentType.Empty]
-            .Concat(surroundingTilesMovementRange[TileContentType.WeaponPickup]).ToArray(), 
+            .Concat(surroundingTilesMovementRange[TileContentType.WeaponPickup]).ToArray()
+            .Concat(surroundingTilesMovementRange[TileContentType.NewLevelHole]).ToArray(),
             surroundingTilesMovementRange[TileContentType.Enemy].ToArray()
         );
     }
@@ -221,7 +222,11 @@ public class TilePlayer : TileEntity
     private bool MovementCursor(Vector3Int newGridPosition)
     {
         if (!surroundingTilesMovementRange[TileContentType.Empty].Contains(newGridPosition) &&
-            !surroundingTilesMovementRange[TileContentType.WeaponPickup].Contains(newGridPosition)) { return false; }
+            !surroundingTilesMovementRange[TileContentType.WeaponPickup].Contains(newGridPosition) &&
+            !surroundingTilesAttackRange[TileContentType.NewLevelHole].Contains(newGridPosition)) 
+        {
+            return false; 
+        }
 
         cursorTargetPosition = newGridPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
         movementTargetPosition = newGridPosition;

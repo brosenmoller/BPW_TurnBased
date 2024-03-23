@@ -12,7 +12,7 @@ public class WinView : UIView
     {
         primarySelectable = RePlayButton;
 
-        RePlayButton.onClick.AddListener(() => SceneManager.LoadScene(1));
+        RePlayButton.onClick.AddListener(() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex));
         MainMenuButton.onClick.AddListener(() => SceneManager.LoadScene(0));
     }
 }
