@@ -149,6 +149,12 @@ public class TilePlayer : TileEntity
     {
         if (executingMode) { return; }
 
+        Vector2 mouseScreenPosition = Mouse.current.position.ReadValue();
+        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(mouseScreenPosition);
+        Vector3Int mouseGridPosition = grid.WorldToCell(mousePosition);
+        if (currentMode == Mode.Moving && !MovementCursor(mouseGridPosition)) { return; }
+        if (currentMode == Mode.Attacking && !AttackCursor(mouseGridPosition)) { return; }
+
         cursor.gameObject.SetActive(false);
         rangeOverlayGenerator.ClearRangeOverlay();
 
@@ -212,10 +218,10 @@ public class TilePlayer : TileEntity
         else if (currentMode == Mode.Attacking) { AttackCursor(mouseGridPosition); }
     }
 
-    private void MovementCursor(Vector3Int newGridPosition)
+    private bool MovementCursor(Vector3Int newGridPosition)
     {
         if (!surroundingTilesMovementRange[TileContentType.Empty].Contains(newGridPosition) &&
-            !surroundingTilesMovementRange[TileContentType.WeaponPickup].Contains(newGridPosition)) { return; }
+            !surroundingTilesMovementRange[TileContentType.WeaponPickup].Contains(newGridPosition)) { return false; }
 
         cursorTargetPosition = newGridPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
         movementTargetPosition = newGridPosition;
@@ -224,14 +230,18 @@ public class TilePlayer : TileEntity
 
         if (currentTarget == null || currentTarget.ContentType == TileContentType.Empty) { cursorSpriteRenderer.color = Color.blue; }
         else if (currentTarget.ContentType == TileContentType.Enemy) { cursorSpriteRenderer.color = Color.red; }
+
+        return true;
     }
     
-    private void AttackCursor(Vector3Int newGridPosition)
+    private bool AttackCursor(Vector3Int newGridPosition)
     {
-        if (!surroundingTilesAttackRange[TileContentType.Enemy].Contains(newGridPosition)) { return; }
+        if (!surroundingTilesAttackRange[TileContentType.Enemy].Contains(newGridPosition)) { return false; }
 
         cursorTargetPosition = newGridPosition + new Vector3(grid.cellSize.x / 2f, grid.cellSize.y / 2f, 0);
         attackTargetPosition = newGridPosition;
+
+        return true;
     }
 
     protected override void OnFixedUpdate()

@@ -171,6 +171,17 @@
                 },
                 {
                     "name": "",
+                    "id": "ffea1f1d-9591-45ec-b12c-105521e5e129",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard_Mouse",
+                    "action": "SelectLocation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "d094e867-3ccd-4be5-9a5c-872fabe88f4b",
                     "path": "<Keyboard>/tab",
                     "interactions": "",
